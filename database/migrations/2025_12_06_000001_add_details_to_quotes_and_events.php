@@ -11,11 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('quotes', function (Blueprint $table) {
-            $table->string('service_type')->nullable()->after('client_id'); // 'rental' or 'decoration'
-            $table->foreignId('event_type_id')->nullable()->after('service_type')->constrained()->nullOnDelete();
-        });
-
         Schema::table('events', function (Blueprint $table) {
             $table->string('service_type')->nullable()->after('client_id');
             $table->foreignId('event_type_id')->nullable()->after('service_type')->constrained()->nullOnDelete();
@@ -27,11 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('quotes', function (Blueprint $table) {
-            $table->dropForeign(['event_type_id']);
-            $table->dropColumn(['service_type', 'event_type_id']);
-        });
-
         Schema::table('events', function (Blueprint $table) {
             $table->dropForeign(['event_type_id']);
             $table->dropColumn(['service_type', 'event_type_id']);

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->date('quote_date');
             $table->decimal('total_amount', 10, 2)->default(0);
             $table->string('status')->default('draft'); // draft, sent, accepted, rejected
+            $table->string('service_type')->nullable(); // 'rental' or 'decoration'
+            $table->foreignId('event_type_id')->nullable()->constrained()->nullOnDelete();
             $table->text('notes')->nullable();
             $table->timestamps();
         });
