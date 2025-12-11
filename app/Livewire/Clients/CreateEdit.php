@@ -33,9 +33,8 @@ class CreateEdit extends Component
         if ($clientId) {
             $client = Client::findOrFail($clientId);
             
-            if ($client->user_id !== auth()->id()) {
-                abort(403);
-            }
+            // Global access
+            // if ($client->user_id !== auth()->id()) { abort(403); }
             
             $this->name = $client->name;
             $this->phone = $client->phone;
@@ -65,22 +64,46 @@ class CreateEdit extends Component
             // Update
             $client = Client::findOrFail($this->clientId);
             
-            if ($client->user_id !== auth()->id()) {
-                abort(403);
-            }
-            
             $client->update($data);
             $message = 'Cliente actualizado.';
+            
+            session()->flash('success', $message);
+            $this->dispatch('client-saved');
+            $this->dispatch('close-modal');
         } else {
             // Create
-            auth()->user()->clients()->create($data);
+            Client::create($data);
             $message = 'Cliente creado.';
+            
+            session()->flash('success', $message);
+            $this->dispatch('client-saved');
+            $this->dispatch('close-modal');
+        }
+    }
+
+    public function saveAndCreateEvent()
+    {
+        $this->validate();
+
+        $data = [
+            'name' => $this->name,
+            'phone' => $this->phone,
+            'email' => $this->email,
+            'contact_name' => $this->contact_name,
+            'contact_relationship' => $this->contact_relationship,
+            'contact_phone' => $this->contact_phone,
+            'instagram' => $this->instagram,
+        ];
+
+        if ($this->clientId) {
+            $client = Client::findOrFail($this->clientId);
+            $client->update($data);
+        } else {
+            $client = Client::create($data);
         }
 
-        session()->flash('success', $message);
-        
-        $this->dispatch('client-saved');
-        $this->dispatch('close-modal');
+        session()->flash('success', 'Cliente guardado. Redirigiendo a crear evento...');
+        return redirect()->route('events.create', ['client_id' => $client->id]);
     }
 
     public function render()

@@ -38,7 +38,7 @@ class CreateEdit extends Component
     public $existingImages = []; // Existing image models
     public $imagesToDelete = []; // IDs of images to delete
 
-    public function mount(Event $event = null)
+    public function mount(Event $event = null, $client_id = null)
     {
         if ($event && $event->exists) {
             $this->eventId = $event->id;
@@ -74,6 +74,9 @@ class CreateEdit extends Component
         } else {
             // Defaults
             $this->status = 'draft';
+            if ($client_id) {
+                $this->client_id = $client_id;
+            }
             // Add one empty item row by default
             $this->items[] = [
                 'product_id' => '',
