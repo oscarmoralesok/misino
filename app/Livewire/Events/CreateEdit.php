@@ -186,9 +186,16 @@ class CreateEdit extends Component
         $event->items()->delete();
         foreach ($this->items as $item) {
             $productName = $item['product_name'];
-            if (empty($productName) && !empty($item['product_id'])) {
+            
+            // If product_id is set, ALWAYS use the official product name
+            // This ensures that even if bad data was loaded, it gets corrected on save
+            if (!empty($item['product_id'])) {
                  $product = Product::find($item['product_id']);
-                 $productName = $product ? $product->name : 'Item';
+                 if ($product) {
+                     $productName = $product->name;
+                 }
+            } elseif (empty($productName)) {
+                $productName = 'Item';
             }
 
             $event->items()->create([
