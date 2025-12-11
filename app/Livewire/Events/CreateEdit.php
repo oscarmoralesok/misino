@@ -231,9 +231,9 @@ class CreateEdit extends Component
     public function render()
     {
         return view('livewire.events.create-edit', [
-            'clients' => auth()->user()->clients()->orderBy('name')->get(),
-            'eventTypes' => auth()->user()->eventTypes()->orderBy('name')->get(),
-            'products' => auth()->user()->products()->orderBy('name')->get(),
+            'clients' => Client::orderBy('name')->get(),
+            'eventTypes' => EventType::orderBy('name')->get(),
+            'products' => Product::orderBy('name')->get(),
         ]);
     }
 }

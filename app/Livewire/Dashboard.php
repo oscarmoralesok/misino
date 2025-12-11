@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Models\Transaction;
 
 class Dashboard extends Component
 {
@@ -14,12 +15,12 @@ class Dashboard extends Component
     {
         $user = auth()->user();
 
-        $this->income = $user->transactions()
+        $this->income = Transaction::query()
             ->where('type', 'income')
             ->whereMonth('date', now()->month)
             ->sum('amount');
 
-        $this->expense = $user->transactions()
+        $this->expense = Transaction::query()
             ->where('type', 'expense')
             ->whereMonth('date', now()->month)
             ->sum('amount');
@@ -29,7 +30,7 @@ class Dashboard extends Component
 
     public function render()
     {
-        $recentTransactions = auth()->user()->transactions()
+        $recentTransactions = Transaction::query()
             ->with(['category', 'event'])
             ->latest('date')
             ->take(5)

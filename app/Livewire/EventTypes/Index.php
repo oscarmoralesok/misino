@@ -33,9 +33,7 @@ class Index extends Component
     {
         $eventType = EventType::findOrFail($id);
         
-        if ($eventType->user_id !== auth()->id()) {
-            abort(403);
-        }
+
 
         $eventType->delete();
         
@@ -50,7 +48,7 @@ class Index extends Component
 
     public function render()
     {
-        $eventTypes = auth()->user()->eventTypes()->orderBy('name')->get();
+        $eventTypes = EventType::orderBy('name')->get();
         
         return view('livewire.event-types.index', [
             'eventTypes' => $eventTypes

@@ -45,10 +45,6 @@ class Index extends Component
     {
         $product = Product::findOrFail($id);
         
-        if ($product->user_id !== auth()->id()) {
-            abort(403);
-        }
-
         $product->delete();
         
         session()->flash('success', 'Producto eliminado.');
@@ -63,7 +59,7 @@ class Index extends Component
 
     public function render()
     {
-        $products = auth()->user()->products()
+        $products = Product::query()
             ->when($this->search, function($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('description', 'like', '%' . $this->search . '%');

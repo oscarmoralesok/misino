@@ -45,10 +45,6 @@ class Index extends Component
     {
         $client = Client::findOrFail($id);
         
-        if ($client->user_id !== auth()->id()) {
-            abort(403);
-        }
-
         $client->delete();
         
         session()->flash('success', 'Cliente eliminado.');
@@ -63,7 +59,7 @@ class Index extends Component
 
     public function render()
     {
-        $clients = auth()->user()->clients()
+        $clients = Client::query()
             ->when($this->search, function($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('phone', 'like', '%' . $this->search . '%')

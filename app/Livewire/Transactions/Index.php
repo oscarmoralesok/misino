@@ -58,9 +58,7 @@ class Index extends Component
     {
         $transaction = Transaction::findOrFail($id);
         
-        if ($transaction->user_id !== auth()->id()) {
-            abort(403);
-        }
+
 
         $transaction->delete();
         
@@ -76,7 +74,7 @@ class Index extends Component
 
     public function render()
     {
-        $transactions = auth()->user()->transactions()
+        $transactions = Transaction::query()
             ->with(['category', 'event.client'])
             ->when($this->filterType, function($query) {
                 $query->where('type', $this->filterType);
@@ -85,7 +83,7 @@ class Index extends Component
             ->paginate(10);
         
         // Calculate totals
-        $totals = auth()->user()->transactions()
+        $totals = Transaction::query()
             ->when($this->filterType, function($query) {
                 $query->where('type', $this->filterType);
             })

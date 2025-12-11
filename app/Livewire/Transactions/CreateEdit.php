@@ -36,9 +36,7 @@ class CreateEdit extends Component
         if ($transactionId) {
             $transaction = Transaction::findOrFail($transactionId);
             
-            if ($transaction->user_id !== auth()->id()) {
-                abort(403);
-            }
+
             
             $this->amount = $transaction->amount;
             $this->type = $transaction->type;
@@ -74,9 +72,7 @@ class CreateEdit extends Component
             // Update
             $transaction = Transaction::findOrFail($this->transactionId);
             
-            if ($transaction->user_id !== auth()->id()) {
-                abort(403);
-            }
+
             
             $transaction->update($data);
             $message = 'Movimiento actualizado.';
@@ -95,7 +91,7 @@ class CreateEdit extends Component
     public function render()
     {
         $categories = Category::all();
-        $events = auth()->user()->events()->with('client')->where('status', '!=', 'completed')->get();
+        $events = Event::with('client')->where('status', '!=', 'completed')->get();
         
         return view('livewire.transactions.create-edit', [
             'categories' => $categories,

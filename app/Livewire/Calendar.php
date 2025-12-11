@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Models\Event;
 
 class Calendar extends Component
 {
@@ -10,7 +11,7 @@ class Calendar extends Component
 
     public function mount()
     {
-        $this->events = auth()->user()->events()
+        $this->events = Event::query()
             ->with('client')
             ->get()
             ->map(function ($event) {

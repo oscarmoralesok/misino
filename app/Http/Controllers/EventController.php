@@ -37,9 +37,7 @@ class EventController extends Controller
     }
     public function confirm(Event $event)
     {
-        if ($event->user_id !== auth()->id()) {
-            abort(403);
-        }
+
 
         $event->update(['status' => 'confirmed']);
 
@@ -48,9 +46,7 @@ class EventController extends Controller
 
     public function destroyImage(Event $event, $imageId)
     {
-        if ($event->user_id !== auth()->id()) {
-            abort(403);
-        }
+
 
         $image = $event->images()->findOrFail($imageId);
         
