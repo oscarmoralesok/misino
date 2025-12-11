@@ -6,16 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    protected $fillable = ['user_id', 'category_id', 'event_id', 'amount', 'type', 'description', 'date', 'payment_method'];
+    protected $fillable = ['category_id', 'event_id', 'amount', 'type', 'description', 'date', 'payment_method'];
 
     protected $casts = [
         'date' => 'date',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function category()
     {

@@ -8,7 +8,6 @@ use App\Models\User;
 class Client extends Model
 {
     protected $fillable = [
-        'user_id',
         'name',
         'phone',
         'email',
@@ -17,9 +16,4 @@ class Client extends Model
         'contact_phone',
         'instagram',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

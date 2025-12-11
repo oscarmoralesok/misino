@@ -12,7 +12,6 @@ class Event extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
         'client_id',
         'event_date',
         'start_time',
@@ -33,11 +32,6 @@ class Event extends Model
         'start_time' => 'datetime:H:i',
         'end_time' => 'datetime:H:i',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function client()
     {

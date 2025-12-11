@@ -38,8 +38,10 @@ class CreateEdit extends Component
     public $existingImages = []; // Existing image models
     public $imagesToDelete = []; // IDs of images to delete
 
-    public function mount(Event $event = null, $client_id = null)
+    public function mount(Event $event = null)
     {
+        $clientId = request()->query('client_id');
+
         if ($event && $event->exists) {
             $this->eventId = $event->id;
             
@@ -74,8 +76,8 @@ class CreateEdit extends Component
         } else {
             // Defaults
             $this->status = 'draft';
-            if ($client_id) {
-                $this->client_id = $client_id;
+            if ($clientId) {
+                $this->client_id = $clientId;
             }
             // Add one empty item row by default
             $this->items[] = [
@@ -181,7 +183,7 @@ class CreateEdit extends Component
             $event = Event::find($this->eventId);
             $event->update($data);
         } else {
-            $data['user_id'] = auth()->id();
+            // $data['user_id'] = auth()->id(); // Removed global access
             $event = Event::create($data);
         }
 
