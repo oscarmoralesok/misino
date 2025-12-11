@@ -25,9 +25,9 @@ class CreateEdit extends Component
         if ($productId) {
             $product = Product::findOrFail($productId);
             
-            if ($product->user_id !== auth()->id()) {
-                abort(403);
-            }
+            // if ($product->user_id !== auth()->id()) {
+            //     abort(403);
+            // }
             
             $this->name = $product->name;
             $this->description = $product->description;
@@ -52,18 +52,16 @@ class CreateEdit extends Component
                 'description' => $this->description,
                 'base_price' => $this->base_price,
             ]);
-            $message = 'Producto actualizado.';
+            session()->flash('success', 'Producto actualizado.');
         } else {
             // Create
-            auth()->user()->products()->create([
+            Product::create([
                 'name' => $this->name,
                 'description' => $this->description,
                 'base_price' => $this->base_price,
             ]);
-            $message = 'Producto creado.';
+            session()->flash('success', 'Producto creado.');
         }
-
-        session()->flash('success', $message);
         
         $this->dispatch('product-saved');
         $this->dispatch('close-modal');

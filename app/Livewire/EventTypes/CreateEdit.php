@@ -21,10 +21,6 @@ class CreateEdit extends Component
         if ($eventTypeId) {
             $eventType = EventType::findOrFail($eventTypeId);
             
-            if ($eventType->user_id !== auth()->id()) {
-                abort(403);
-            }
-            
             $this->name = $eventType->name;
         }
     }
@@ -45,7 +41,7 @@ class CreateEdit extends Component
             $message = 'Tipo de evento actualizado.';
         } else {
             // Create
-            auth()->user()->eventTypes()->create(['name' => $this->name]);
+            EventType::create(['name' => $this->name]);
             $message = 'Tipo de evento creado.';
         }
 

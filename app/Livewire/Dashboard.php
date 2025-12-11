@@ -13,7 +13,7 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $user = auth()->user();
+        // $user = auth()->user();
 
         $this->income = Transaction::query()
             ->where('type', 'income')

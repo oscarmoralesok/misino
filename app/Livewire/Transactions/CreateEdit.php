@@ -78,7 +78,7 @@ class CreateEdit extends Component
             $message = 'Movimiento actualizado.';
         } else {
             // Create
-            auth()->user()->transactions()->create($data);
+            Transaction::create($data);
             $message = 'Movimiento creado.';
         }
 
