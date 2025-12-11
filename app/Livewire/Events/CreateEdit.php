@@ -113,6 +113,7 @@ class CreateEdit extends Component
                 $product = Product::find($productId);
                 if ($product) {
                     $this->items[$index]['unit_price'] = $product->base_price;
+                    $this->items[$index]['product_name'] = $product->name;
                 }
             }
         }
