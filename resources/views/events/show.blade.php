@@ -32,11 +32,17 @@
                 <a href="{{ route('events.edit', $event) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded shadow inline-block">
                     ✏️ Editar
                 </a>
+                <a href="{{ route('events.pdf', $event) }}" target="_blank" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow inline-block ml-2">
+                    📄 PDF
+                </a>
             </div>
         @else
             <div class="mt-4">
                 <a href="{{ route('events.edit', $event) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded shadow inline-block">
                     ✏️ Editar
+                </a>
+                <a href="{{ route('events.pdf', $event) }}" target="_blank" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow inline-block ml-2">
+                    📄 PDF
                 </a>
             </div>
         @endif

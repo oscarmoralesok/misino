@@ -58,4 +58,13 @@ class EventController extends Controller
 
         return back()->with('success', 'Imagen eliminada exitosamente.');
     }
+
+    public function downloadPdf(Event $event)
+    {
+        $event->load(['client', 'items']);
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('events.pdf', compact('event'));
+        
+        return $pdf->download('presupuesto-' . $event->id . '.pdf');
+    }
 }

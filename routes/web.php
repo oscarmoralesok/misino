@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
     Route::patch('/events/{event}/confirm', [EventController::class, 'confirm'])->name('events.confirm');
     Route::delete('/events/{event}/images/{image}', [EventController::class, 'destroyImage'])->name('events.images.destroy');
+    Route::get('/events/{event}/pdf', [EventController::class, 'downloadPdf'])->name('events.pdf');
     Route::resource('users', UserController::class)->except(['show', 'edit', 'update']);
     // Clients - Livewire
     Route::get('/clients', App\Livewire\Clients\Index::class)->name('clients.index');
