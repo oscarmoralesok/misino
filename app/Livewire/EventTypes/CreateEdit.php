@@ -33,10 +33,6 @@ class CreateEdit extends Component
             // Update
             $eventType = EventType::findOrFail($this->eventTypeId);
             
-            if ($eventType->user_id !== auth()->id()) {
-                abort(403);
-            }
-            
             $eventType->update(['name' => $this->name]);
             $message = 'Tipo de evento actualizado.';
         } else {

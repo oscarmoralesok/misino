@@ -25,11 +25,7 @@ class EventController extends Controller
 
     public function destroy(Event $event)
     {
-        // Removed auth check as requested
-        // if ($event->user_id !== auth()->id()) {
-        //     abort(403);
-        // }
-
+        // Global access
         $event->delete();
 
         return redirect()->route('events.index')

@@ -33,8 +33,6 @@ class Index extends Component
     {
         $eventType = EventType::findOrFail($id);
         
-
-
         $eventType->delete();
         
         session()->flash('success', 'Tipo de evento eliminado.');

@@ -43,10 +43,6 @@ class CreateEdit extends Component
             // Update
             $product = Product::findOrFail($this->productId);
             
-            if ($product->user_id !== auth()->id()) {
-                abort(403);
-            }
-            
             $product->update([
                 'name' => $this->name,
                 'description' => $this->description,

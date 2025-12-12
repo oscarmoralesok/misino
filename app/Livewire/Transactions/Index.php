@@ -58,8 +58,6 @@ class Index extends Component
     {
         $transaction = Transaction::findOrFail($id);
         
-
-
         $transaction->delete();
         
         session()->flash('success', 'Movimiento eliminado.');
