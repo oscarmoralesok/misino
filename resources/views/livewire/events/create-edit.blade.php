@@ -197,7 +197,7 @@
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                                 @foreach($existingImages as $img)
                                     <div class="relative group">
-                                        <img src="{{ asset('storage/' . $img['image_path']) }}" class="w-full h-32 object-cover rounded border border-gray-300 dark:border-gray-600">
+                                        <img src="{{ Storage::url($img['image_path']) }}" class="w-full h-32 object-cover rounded border border-gray-300 dark:border-gray-600">
                                         <button type="button" 
                                                 wire:click="deleteExistingImage({{ $img['id'] }})"
                                                 class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
