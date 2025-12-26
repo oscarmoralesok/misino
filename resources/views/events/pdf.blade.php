@@ -242,7 +242,7 @@
                                 </tr><tr>
                             @endif
                             <td>
-                                <img src="{{ public_path('storage/' . $image->image_path) }}" class="gallery-img">
+                                <img src="{{ storage_path('app/public/' . $image->image_path) }}" class="gallery-img">
                             </td>
                         @endforeach
                         
