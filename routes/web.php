@@ -44,6 +44,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/event-types', App\Livewire\EventTypes\Index::class)->name('event-types.index');
     Route::get('/calendar', App\Livewire\Calendar::class)->name('calendar.index');
     // Route::get('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events'); // Removed
+    
+    // Serve storage files fallback
+    Route::get('/storage-file/{path}', [EventController::class, 'serveFile'])->where('path', '.*')->name('storage.serve');
 });
 
 require __DIR__.'/auth.php';

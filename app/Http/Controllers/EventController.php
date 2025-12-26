@@ -63,4 +63,16 @@ class EventController extends Controller
         
         return $pdf->download('presupuesto-' . $event->id . '.pdf');
     }
+
+    public function serveFile($path)
+    {
+        // Decode path if needed, though usually automatic
+        $fullPath = Storage::disk('public')->path($path);
+
+        if (!file_exists($fullPath)) {
+            abort(404);
+        }
+
+        return response()->file($fullPath);
+    }
 }

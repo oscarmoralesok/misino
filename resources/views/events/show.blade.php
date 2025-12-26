@@ -103,11 +103,11 @@
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             @foreach($event->images as $image)
                                 <div class="relative group">
-                                    <a href="{{ Storage::url($image->image_path) }}" 
+                                    <a href="{{ route('storage.serve', ['path' => $image->image_path]) }}" 
                                        data-fancybox="gallery" 
                                        data-caption="{{ $image->original_name }}"
                                        class="block">
-                                        <img src="{{ Storage::url($image->image_path) }}" 
+                                        <img src="{{ route('storage.serve', ['path' => $image->image_path]) }}" 
                                              alt="{{ $image->original_name }}"
                                              class="w-full object-contain rounded border border-gray-300 dark:border-gray-600 hover:opacity-75 transition cursor-pointer">
                                     </a>
