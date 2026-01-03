@@ -14,7 +14,7 @@ class Logistics extends Component
 
     public function mount()
     {
-        $this->date = now()->format('Y-m-d');
+        $this->date = request()->date ?? now()->format('Y-m-d');
     }
 
     public function updatedDate()
