@@ -147,8 +147,7 @@ class CreateEdit extends Component
         $transportItem = [
             'product_id' => '',
             'product_name' => 'Transporte',
-            'description' => number_format($distanceKm, 2) . ' km (Calc: km/14 * $1950)',
-            'quantity' => 1,
+            'quantity' => 4,
             'unit_price' => round($totalCost, 2),
         ];
 
