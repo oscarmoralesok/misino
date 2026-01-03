@@ -45,14 +45,14 @@
 
                             <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
                                 <h4 class="font-bold text-gray-800 dark:text-gray-200 mb-2">Artículos / Logística:</h4>
-                                @if(is_array($event->items) && count($event->items) > 0)
+                                @if($event->items && $event->items->count() > 0)
                                     <ul class="list-disc list-inside space-y-1">
                                         @foreach($event->items as $item)
                                             <li class="text-gray-700 dark:text-gray-300 text-sm">
-                                                <span class="font-bold text-indigo-600 dark:text-indigo-400">{{ $item['quantity'] ?? 1 }}x</span> 
-                                                {{ $item['product_name'] ?? ('Producto #' . ($item['product_id'] ?? '?')) }}
-                                                @if(!empty($item['description']))
-                                                    <span class="text-gray-500 italic">({{ $item['description'] }})</span>
+                                                <span class="font-bold text-indigo-600 dark:text-indigo-400">{{ $item->quantity ?? 1 }}x</span> 
+                                                {{ $item->product_name ?? optional($item->product)->name ?? ('Producto #' . ($item->product_id ?? '?')) }}
+                                                @if(!empty($item->description))
+                                                    <span class="text-gray-500 italic">({{ $item->description }})</span>
                                                 @endif
                                             </li>
                                         @endforeach

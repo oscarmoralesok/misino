@@ -23,7 +23,7 @@ class Logistics extends Component
     public function render()
     {
         $events = Event::query()
-            ->with(['client', 'eventType', 'items']) // Load items specifically
+            ->with(['client', 'eventType', 'items.product']) // Load items and their products
             ->whereDate('event_date', $this->date)
             ->orderBy('start_time')
             ->get();
