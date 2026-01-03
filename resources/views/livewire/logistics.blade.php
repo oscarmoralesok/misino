@@ -17,7 +17,7 @@
             {{-- Events List --}}
             <div class="space-y-6">
                 @forelse($events as $event)
-                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border-l-4 border-indigo-500">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border-l-4" style="border-left-color: {{ $event->eventType->color ?? '#6366f1' }};">
                         <div class="p-6">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
                                 <div>
