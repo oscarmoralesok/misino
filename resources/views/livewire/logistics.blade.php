@@ -26,9 +26,6 @@
                                         {{ $event->eventType->name ?? 'General' }} | 
                                         {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }}
                                     </p>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 mt-1">
-                                        {{ strtoupper($event->status) }}
-                                    </span>
                                 </div>
                                 <div class="mt-4 md:mt-0 text-right">
                                     @if($event->address)
