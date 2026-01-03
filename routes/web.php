@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
     // Event Types - Livewire
     Route::get('/event-types', App\Livewire\EventTypes\Index::class)->name('event-types.index');
     Route::get('/calendar', App\Livewire\Calendar::class)->name('calendar.index');
+    Route::get('/logistics', App\Livewire\Logistics::class)->name('logistics.index'); // Logistics Module
     // Route::get('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events'); // Removed
     
     // Serve storage files fallback
