@@ -38,6 +38,10 @@ class CreateEdit extends Component
     public $existingImages = []; // Existing image models
     public $imagesToDelete = []; // IDs of images to delete
 
+    // Transport Settings (Ideally from Config/DB)
+    public $originLat = -31.466196619930223; //, 
+    public $originLng = -64.27277410059212;
+
     public function mount(Event $event = null)
     {
         $clientId = request()->query('client_id');
@@ -45,7 +49,6 @@ class CreateEdit extends Component
         if ($event && $event->exists) {
             $this->eventId = $event->id;
             
-            $this->client_id = $event->client_id;
             $this->client_id = $event->client_id;
             $this->status = $event->status;
             $this->event_date = $event->event_date->format('Y-m-d');
@@ -132,6 +135,40 @@ class CreateEdit extends Component
         $this->existingImages = array_filter($this->existingImages, function($img) use ($imageId) {
             return $img['id'] != $imageId;
         });
+    }
+
+    public function addTransportCost($distanceKm)
+    {
+        // Formula: (Km / 14) * 1950
+        // This implies 14 km/liter? and $1950/liter? Just applying the formula.
+        $totalCost = ($distanceKm / 14) * 1950;
+
+        // 2. Format the item
+        $transportItem = [
+            'product_id' => '',
+            'product_name' => 'Transporte',
+            'description' => number_format($distanceKm, 2) . ' km (Calc: km/14 * $1950)',
+            'quantity' => 1,
+            'unit_price' => round($totalCost, 2),
+        ];
+
+        // 3. Search if "Transporte" item already exists to update it
+        $found = false;
+        foreach ($this->items as $index => $item) {
+            if ($item['product_name'] === 'Transporte') {
+                $this->items[$index] = $transportItem;
+                $found = true;
+                break;
+            }
+        }
+
+        // 4. If not found, add it
+        if (!$found) {
+            $this->items[] = $transportItem;
+        }
+
+        // Optional: Notify user
+        $this->dispatch('notify-transport-added', message: 'Transporte calculado: $' . number_format($totalCost, 2));
     }
 
     public function save()

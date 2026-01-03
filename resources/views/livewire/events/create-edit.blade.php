@@ -88,11 +88,20 @@
                 {{-- Address with Google Maps Integration (via Alpine/Wire) --}}
                 <div class="mb-6" wire:ignore>
                     <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Dirección del Evento</label>
-                    <input type="text" 
-                            id="address" 
-                            wire:model="address"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
-                            placeholder="Buscar dirección...">
+                    <div class="flex gap-2">
+                        <input type="text" 
+                                id="address" 
+                                wire:model="address"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                                placeholder="Buscar dirección...">
+                        
+                        <button type="button" 
+                                onclick="calculateTransport()"
+                                class="mt-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-bold rounded-md shadow-sm whitespace-nowrap"
+                                title="Calcula la distancia desde el origen y agrega el ítem de transporte">
+                            Calcular Envío
+                        </button>
+                    </div>
                     @error('address') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     
                     <div id="map" class="mt-3 rounded-lg border border-gray-300 dark:border-gray-600" style="height: 300px;"></div>
@@ -239,7 +248,13 @@
         let marker;
         let autocomplete;
 
-        function initMap() {
+        // Config from Backend
+        // For security in production, these should be handled carefully, but for this feature:
+        const originLat = {{ $originLat }};
+        const originLng = {{ $originLng }};
+
+        // Make initMap global so the Google Maps callback can find it
+        window.initMap = function() {
             const addressInput = document.getElementById('address');
             if(!addressInput) return;
 
@@ -265,10 +280,13 @@
             });
 
             // Check existing coordinates
-            const lat = @this.get('latitude');
-            const lng = @this.get('longitude');
+            // Use Blade interpolation to get the initial values directly as numbers or null
+            // We use standard PHP null coalescing to print 'null' if empty
+            const lat = {{ $latitude ?: 'null' }};
+            const lng = {{ $longitude ?: 'null' }};
+            
             if(lat && lng) {
-                showMap(parseFloat(lat), parseFloat(lng));
+                showMap(Number(lat), Number(lng));
             }
         }
 
@@ -290,6 +308,55 @@
                 map.setCenter(location);
                 marker.setPosition(location);
             }
+        }
+
+        function calculateTransport() {
+            const destLat = @this.get('latitude');
+            const destLng = @this.get('longitude');
+
+            if (!destLat || !destLng) {
+                alert('Por favor, selecciona una dirección válida en el mapa primero.');
+                return;
+            }
+
+            const origin = new google.maps.LatLng(originLat, originLng);
+            const destination = new google.maps.LatLng(destLat, destLng);
+
+            // Use Distance Matrix Service for Driving Distance
+            const service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix(
+                {
+                    origins: [origin],
+                    destinations: [destination],
+                    travelMode: google.maps.TravelMode.DRIVING,
+                    unitSystem: google.maps.UnitSystem.METRIC,
+                }, 
+                (response, status) => {
+                    if (status !== "OK") {
+                        alert("Error al calcular la distancia: " + status);
+                        return;
+                    }
+
+                    const element = response.rows[0].elements[0];
+                    
+                    if (element.status === "OK") {
+                        // distance.value is in meters
+                        const distanceInMeters = element.distance.value;
+                        const distanceInKm = distanceInMeters / 1000;
+                        
+                        // Send to livewire
+                        @this.call('addTransportCost', distanceInKm);
+                    } else {
+                        alert("No se pudo calcular la ruta: " + element.status);
+                    }
+                }
+            );
+        }
+
+
+        // Check if Google Maps is already loaded (e.g. from cache or SPA nav) and init manually
+        if (typeof google !== 'undefined' && typeof google.maps !== 'undefined') {
+            window.initMap();
         }
     </script>
 </div>
