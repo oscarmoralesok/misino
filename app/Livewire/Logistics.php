@@ -24,6 +24,7 @@ class Logistics extends Component
     {
         $events = Event::query()
             ->with(['client', 'eventType', 'items.product']) // Load items and their products
+            ->where('status', 'confirmed') // Only confirmed events
             ->whereDate('event_date', $this->date)
             ->orderBy('start_time')
             ->get();
