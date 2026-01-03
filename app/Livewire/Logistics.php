@@ -8,6 +8,8 @@ use Carbon\Carbon;
 
 class Logistics extends Component
 {
+    protected $queryString = ['date'];
+
     public $date;
 
     public function mount()
