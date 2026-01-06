@@ -279,6 +279,11 @@
                 showMap(lat, lng);
             });
 
+            // Listen for manual input changes (when user types directly)
+            addressInput.addEventListener('input', function(e) {
+                @this.set('address', e.target.value);
+            });
+
             // Check existing coordinates
             // Use Blade interpolation to get the initial values directly as numbers or null
             // We use standard PHP null coalescing to print 'null' if empty
