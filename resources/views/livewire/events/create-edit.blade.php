@@ -91,7 +91,7 @@
                     <div class="flex gap-2">
                         <input type="text" 
                                 id="address" 
-                                wire:model="address"
+                                value="{{ $address }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
                                 placeholder="Buscar dirección...">
                         
