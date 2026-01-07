@@ -271,10 +271,14 @@
                 const lat = place.geometry.location.lat();
                 const lng = place.geometry.location.lng();
 
-                // Update Livewire
-                @this.set('address', place.formatted_address);
-                @this.set('latitude', lat);
-                @this.set('longitude', lng);
+                // Wait for Google to finish updating the input, then capture its value
+                setTimeout(() => {
+                    const finalAddress = addressInput.value; // This will have the full text from dropdown
+                    
+                    @this.set('address', finalAddress);
+                    @this.set('latitude', lat);
+                    @this.set('longitude', lng);
+                }, 50);
 
                 showMap(lat, lng);
             });
