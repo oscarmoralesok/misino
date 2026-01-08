@@ -14,6 +14,7 @@ class CalendarController extends Controller
     public function events()
     {
         $events = auth()->user()->events()
+            ->where('status', 'confirmed')
             ->with('client')
             ->get()
             ->map(function ($event) {

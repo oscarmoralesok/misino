@@ -12,6 +12,7 @@ class Calendar extends Component
     public function mount()
     {
         $this->events = Event::query()
+            ->where('status', 'confirmed')
             ->with('client')
             ->get()
             ->map(function ($event) {
