@@ -128,15 +128,26 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button wire:click="edit({{ $transaction->id }})" 
-                                                    class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 mr-3">
-                                                Editar
-                                            </button>
-                                            <button onclick="confirm('¿Estás seguro de eliminar este movimiento?') || event.stopImmediatePropagation()" 
-                                                    wire:click="delete({{ $transaction->id }})"
-                                                    class="text-red-600 hover:text-red-900 dark:text-red-400">
-                                                Eliminar
-                                            </button>
+                                            <div class="flex justify-end gap-3">
+                                                @if($transaction->type === 'income' && $transaction->event_id)
+                                                    <a href="{{ route('transactions.receipt', $transaction) }}" 
+                                                       class="text-teal-600 hover:text-teal-900 dark:text-teal-400 inline-flex items-center"
+                                                       title="Descargar Recibo">
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                        </svg>
+                                                    </a>
+                                                @endif
+                                                <button wire:click="edit({{ $transaction->id }})" 
+                                                        class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400">
+                                                    Editar
+                                                </button>
+                                                <button onclick="confirm('¿Estás seguro de eliminar este movimiento?') || event.stopImmediatePropagation()" 
+                                                        wire:click="delete({{ $transaction->id }})"
+                                                        class="text-red-600 hover:text-red-900 dark:text-red-400">
+                                                    Eliminar
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

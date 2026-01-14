@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
 
     // Transactions - Livewire
     Route::get('/transactions', App\Livewire\Transactions\Index::class)->name('transactions.index');
+    Route::get('/transactions/{transaction}/receipt', [App\Http\Controllers\TransactionController::class, 'downloadReceipt'])->name('transactions.receipt');
     
     // Events - Hybrid (Index=Livewire, Create/Edit/Show=Controller)
     Route::get('/events', App\Livewire\Events\Index::class)->name('events.index');
