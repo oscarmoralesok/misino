@@ -35,22 +35,49 @@
             <div class="p-6 text-gray-900 dark:text-gray-100">
                 
                 {{-- Header with Filters and Create Button --}}
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-6">
                     <h3 class="text-lg font-bold">Historial de Movimientos</h3>
                     
-                    <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:flex gap-3 w-full xl:w-auto">
+                        {{-- Month Filter --}}
+                        <select wire:model.live="filterMonth" 
+                                class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+                            <option value="">Mes (Todos)</option>
+                            @foreach(range(1, 12) as $m)
+                                <option value="{{ $m }}">{{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}</option>
+                            @endforeach
+                        </select>
+
+                        {{-- Year Filter --}}
+                        <select wire:model.live="filterYear" 
+                                class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+                            <option value="">Año (Todos)</option>
+                            @foreach(range(date('Y'), date('Y') - 5) as $y)
+                                <option value="{{ $y }}">{{ $y }}</option>
+                            @endforeach
+                        </select>
+
+                        {{-- Category Filter --}}
+                        <select wire:model.live="filterCategoryId" 
+                                class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+                            <option value="">Categoría (Todas)</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+
                         {{-- Type Filter --}}
                         <select wire:model.live="filterType" 
                                 class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
-                            <option value="">Todos</option>
+                            <option value="">Tipo (Todos)</option>
                             <option value="income">Ingresos</option>
                             <option value="expense">Gastos</option>
                         </select>
                         
                         {{-- Create Button --}}
                         <button wire:click="openCreateModal" 
-                                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded whitespace-nowrap">
-                            + Nuevo Movimiento
+                                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded whitespace-nowrap xl:ml-2">
+                            + Nuevo
                         </button>
                     </div>
                 </div>

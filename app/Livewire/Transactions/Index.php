@@ -12,22 +12,53 @@ class Index extends Component
     use WithPagination;
 
     public $filterType = '';
+    public $filterMonth = '';
+    public $filterYear = '';
+    public $filterCategoryId = '';
     public $showModal = false;
     public $editingId = null;
     public $create = false;
     public $initialEventId = null;
     public $initialType = 'expense';
 
-    protected $queryString = ['filterType', 'create', 'initialEventId' => ['as' => 'event_id'], 'initialType' => ['as' => 'type']];
+    protected $queryString = [
+        'filterType', 
+        'filterMonth', 
+        'filterYear', 
+        'filterCategoryId', 
+        'create', 
+        'initialEventId' => ['as' => 'event_id'], 
+        'initialType' => ['as' => 'type']
+    ];
 
     public function mount()
     {
         if ($this->create) {
             $this->showModal = true;
         }
+
+        // Default to current month and year could be an option, 
+        // but often 'All' is better for inventory-like views.
+        // If we want current year by default:
+        // $this->filterYear = date('Y');
     }
 
     public function updatingFilterType()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterMonth()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterYear()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterCategoryId()
     {
         $this->resetPage();
     }
@@ -72,27 +103,48 @@ class Index extends Component
 
     public function render()
     {
-        $transactions = Transaction::query()
+        $query = Transaction::query()
             ->with(['category', 'event.client'])
             ->when($this->filterType, function($query) {
                 $query->where('type', $this->filterType);
             })
-            ->latest('date')
-            ->paginate(10);
+            ->when($this->filterMonth, function($query) {
+                $query->whereMonth('date', $this->filterMonth);
+            })
+            ->when($this->filterYear, function($query) {
+                $query->whereYear('date', $this->filterYear);
+            })
+            ->when($this->filterCategoryId, function($query) {
+                $query->where('category_id', $this->filterCategoryId);
+            });
+
+        $transactions = $query->clone()->latest('date')->paginate(10);
         
-        // Calculate totals
+        // Calculate totals based on same filters
         $totals = Transaction::query()
             ->when($this->filterType, function($query) {
                 $query->where('type', $this->filterType);
             })
+            ->when($this->filterMonth, function($query) {
+                $query->whereMonth('date', $this->filterMonth);
+            })
+            ->when($this->filterYear, function($query) {
+                $query->whereYear('date', $this->filterYear);
+            })
+            ->when($this->filterCategoryId, function($query) {
+                $query->where('category_id', $this->filterCategoryId);
+            })
             ->selectRaw('type, SUM(amount) as total')
             ->groupBy('type')
             ->pluck('total', 'type');
+
+        $categories = \App\Models\Category::all();
         
         return view('livewire.transactions.index', [
             'transactions' => $transactions,
             'totalIncome' => $totals['income'] ?? 0,
             'totalExpense' => $totals['expense'] ?? 0,
+            'categories' => $categories,
         ]);
     }
 }
