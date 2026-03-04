@@ -10,7 +10,7 @@
             </div>
 
             <!-- Mobile Controls -->
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-3">
                 <!-- Hamburger -->
                 <button @click="open = ! open" class="p-2.5 rounded-2xl bg-gray-50 dark:bg-gray-800 text-gray-500 hover:text-primary-600 transition-all duration-200">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -46,6 +46,10 @@
             <div class="space-y-4">
                 <div class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] px-2">Eventos & Agenda</div>
                 <div class="grid grid-cols-1 gap-2">
+                    <x-responsive-nav-link :href="route('events.create')" :active="request()->routeIs('events.create')" class="flex items-center p-4 rounded-2xl {{ request()->routeIs('events.create') ? 'bg-primary-50 text-primary-600 border-none' : 'text-gray-600 dark:text-gray-300 border-none hover:bg-gray-50 dark:hover:bg-gray-800' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        <span class="font-bold text-sm">{{ __('Nuevo Evento') }}</span>
+                    </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('events.index', ['status' => 'pending'])" :active="request()->fullUrlIs(route('events.index', ['status' => 'pending']))" class="flex items-center p-4 rounded-2xl {{ request()->fullUrlIs(route('events.index', ['status' => 'pending'])) ? 'bg-orange-50 text-orange-600 border-none' : 'text-gray-600 dark:text-gray-300 border-none hover:bg-gray-50 dark:hover:bg-gray-800' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="font-bold text-sm">{{ __('Pendientes') }}</span>

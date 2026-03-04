@@ -26,6 +26,11 @@
         <div>
             <div class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] mb-4 px-4">Eventos & Agenda</div>
             <div class="space-y-1">
+                <x-nav-link :href="route('events.create')" :active="request()->routeIs('events.create')" 
+                    class="group flex items-center px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 {{ request()->routeIs('events.create') ? 'bg-white text-primary-600 shadow-soft dark:bg-gray-800' : 'text-gray-500 hover:bg-white/50 hover:text-gray-900 dark:hover:bg-gray-800/50' }}">
+                    <svg class="w-5 h-5 mr-3 {{ request()->routeIs('events.create') ? 'text-primary-500' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    {{ __('Nuevo Evento') }}
+                </x-nav-link>
                 <x-nav-link :href="route('events.index', ['status' => 'pending'])" :active="request()->fullUrlIs(route('events.index', ['status' => 'pending']))" 
                     class="group flex items-center px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 {{ request()->fullUrlIs(route('events.index', ['status' => 'pending'])) ? 'bg-orange-50/50 text-orange-600 dark:bg-orange-900/10' : 'text-gray-500 hover:bg-white/50 hover:text-gray-900 dark:hover:bg-gray-800/50' }}">
                     <svg class="w-5 h-5 mr-3 {{ request()->fullUrlIs(route('events.index', ['status' => 'pending'])) ? 'text-orange-500' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
