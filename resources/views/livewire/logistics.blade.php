@@ -22,87 +22,114 @@
         @forelse($events as $event)
             <div class="premium-card overflow-hidden group">
                 <div class="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-100 dark:divide-gray-800">
-                    {{-- Time & Status --}}
-                    <div class="p-8 lg:w-64 bg-gray-50/50 dark:bg-gray-800/30 flex flex-col justify-center items-center text-center">
-                        <div class="w-12 h-12 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-primary-600 shadow-sm mb-3 group-hover:scale-110 transition-transform">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <div class="text-2xl font-display font-bold text-gray-800 dark:text-white leading-none">
-                            {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }}
-                        </div>
-                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
-                            Fin: {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }}
+                    {{-- Left Column: Time, Status & Client Info --}}
+                    <div class="p-8 lg:w-72 bg-gray-50/50 dark:bg-gray-800/30 flex flex-col items-center text-center">
+                        {{-- Time Hero --}}
+                        <div class="relative group/time mb-6">
+                            <div class="w-14 h-14 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-primary-600 shadow-sm mb-3 mx-auto transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary-500/10">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div class="text-3xl font-display font-bold text-gray-800 dark:text-white leading-none tracking-tight">
+                                {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }}
+                            </div>
+                            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">
+                                Fin: {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }}
+                            </div>
                         </div>
                         
-                        <div class="mt-4">
-                            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-widest border" 
+                        {{-- Event Type Badge --}}
+                        <div class="mb-8">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border" 
                                   style="border-color: {{ $event->eventType->color ?? '#6366f1' }}40; color: {{ $event->eventType->color ?? '#6366f1' }}; background-color: {{ $event->eventType->color ?? '#6366f1' }}10;">
                                 {{ $event->eventType->name ?? 'General' }}
                             </span>
                         </div>
-                    </div>
 
-                    {{-- Main Info --}}
-                    <div class="p-8 flex-1 space-y-6">
-                        <div class="flex flex-col md:flex-row justify-between items-start gap-4">
-                            <div>
-                                <h3 class="text-xl font-display font-bold text-gray-800 dark:text-white group-hover:text-primary-600 transition-colors">
+                        {{-- Divider --}}
+                        <div class="w-full h-px bg-gray-100 dark:bg-gray-700/50 mb-8"></div>
+
+                        {{-- Client Info & Maps --}}
+                        <div class="space-y-4 w-full">
+                            <div class="px-2">
+                                <h3 class="text-lg font-display font-bold text-primary-600 dark:text-primary-400 leading-tight">
                                     {{ $event->client->name ?? 'Sin Cliente' }}
                                 </h3>
                                 @if($event->address)
-                                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                        <svg class="w-4 h-4 mr-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-2 line-clamp-2 leading-relaxed font-medium">
                                         {{ $event->address }}
-                                    </div>
+                                    </p>
                                 @endif
                             </div>
 
                             @if($event->address)
-                                <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($event->address) }}" target="_blank" 
-                                   class="btn-primary !text-[10px] !py-2 !px-4 !bg-emerald-500 hover:!bg-emerald-600 shadow-emerald-500/10 flex items-center uppercase tracking-widest font-bold">
-                                    <svg class="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                                    Ver en Maps
-                                </a>
+                                <div class="pt-2">
+                                    <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($event->address) }}" target="_blank" 
+                                       class="w-full inline-flex items-center justify-center py-2.5 px-4 bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 active:scale-95 group/map">
+                                        <svg class="w-3.5 h-3.5 mr-2 transition-transform group-hover/map:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                                        Maps
+                                    </a>
+                                </div>
                             @endif
                         </div>
+                    </div>
 
+                    {{-- Main Column: Materials & Notes --}}
+                    <div class="p-8 flex-1 space-y-8">
+                        {{-- Items Section --}}
                         <div class="space-y-4">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Materiales y Artículos</p>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-1.5 h-7 bg-primary-500 rounded-full"></div>
+                                <h4 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Materiales y Equipamiento</h4>
+                            </div>
+                            
                             @if($event->items && $event->items->count() > 0)
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     @foreach($event->items as $item)
-                                        <div class="flex items-center p-3 bg-gray-50/50 dark:bg-gray-900/40 rounded-xl border border-gray-100 dark:border-gray-800">
-                                            <div class="w-8 h-8 bg-primary-50 dark:bg-primary-900/20 rounded-lg flex items-center justify-center text-primary-600 font-bold text-xs mr-3">
+                                        <div class="group/item flex items-center p-4 bg-gray-50/50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-primary-200 dark:hover:border-primary-900/30 transition-all duration-300">
+                                            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center text-primary-600 font-display font-bold text-sm mr-4 group-hover/item:scale-110 transition-transform">
                                                 {{ $item->quantity ?? 1 }}
                                             </div>
                                             <div class="flex-1 min-w-0">
-                                                <p class="text-sm font-bold text-gray-800 dark:text-gray-200 truncate">
+                                                <p class="text-sm font-bold text-gray-800 dark:text-gray-200 truncate group-hover/item:text-primary-600 transition-colors">
                                                     {{ $item->product_name ?? optional($item->product)->name ?? 'Producto' }}
                                                 </p>
                                                 @if(!empty($item->description))
-                                                    <p class="text-[10px] text-gray-400 italic truncate">{{ $item->description }}</p>
+                                                    <p class="text-[11px] text-gray-400 mt-0.5 line-clamp-1 italic">{{ $item->description }}</p>
                                                 @endif
                                             </div>
                                         </div>
                                     @endforeach
                                 </div>
                             @else
-                                <p class="text-xs text-gray-400 italic">No hay artículos registrados para este transporte.</p>
+                                <div class="p-8 bg-gray-50/50 dark:bg-gray-900/40 rounded-2xl border border-dashed border-gray-200 dark:border-gray-800 text-center">
+                                    <p class="text-xs text-gray-400 font-medium italic">No se han registrado artículos para este transporte.</p>
+                                </div>
                             @endif
                         </div>
 
-                        @if($event->detail)
-                            <div class="p-4 bg-amber-50 dark:bg-amber-900/10 rounded-2xl border border-amber-100 dark:border-amber-900/20">
-                                <p class="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest mb-1">Notas de Logística:</p>
-                                <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">{{ $event->detail }}</p>
+                        {{-- Details & Internal Link --}}
+                        <div class="flex flex-col md:flex-row gap-6 items-end">
+                            <div class="flex-1 w-full">
+                                @if($event->detail)
+                                    <div class="p-5 bg-amber-50 dark:bg-amber-900/10 rounded-2xl border border-amber-100 dark:border-amber-900/20 relative overflow-hidden group/notes">
+                                        <div class="absolute top-0 right-0 p-3 text-amber-500/20 transform translate-x-1 -translate-y-1">
+                                            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
+                                        </div>
+                                        <p class="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-[0.2em] mb-2 flex items-center">
+                                            <span class="w-1.5 h-1.5 bg-amber-500 rounded-full mr-2"></span>
+                                            Instrucciones Especiales
+                                        </p>
+                                        <p class="text-[13px] text-gray-600 dark:text-gray-300 leading-relaxed font-medium">{{ $event->detail }}</p>
+                                    </div>
+                                @endif
                             </div>
-                        @endif
-                        
-                        <div class="flex justify-end pt-4">
-                            <a href="{{ route('events.show', $event) }}" class="text-[10px] font-bold text-primary-600 uppercase tracking-widest hover:underline flex items-center">
-                                Ver Detalles Completos
-                                <svg class="w-3 h-3 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            </a>
+                            
+                            <div class="flex-shrink-0">
+                                <a href="{{ route('events.show', $event) }}" class="inline-flex items-center px-6 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-primary-600 dark:hover:bg-primary-600 text-[10px] font-bold text-gray-500 dark:text-gray-400 hover:text-white dark:hover:text-white uppercase tracking-widest rounded-xl transition-all duration-300">
+                                    Ficha del Evento
+                                    <svg class="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
