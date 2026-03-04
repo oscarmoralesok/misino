@@ -1,127 +1,153 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ $event->detail ? Str::limit($event->detail, 30) : 'Detalle del Evento' }}
-        </h2>
-        <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            {{ $event->event_date->format('d F, Y') }} 
-            @if($event->start_time)
-                | {{ $event->start_time->format('H:i') }} - {{ $event->end_time ? $event->end_time->format('H:i') : '' }}
-            @endif
-            @if($event->eventType)
-                <span class="ml-2 px-2 py-0.5 rounded text-xs bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
-                    {{ $event->eventType->name }}
-                </span>
-            @endif
-            @if($event->service_type)
-                <span class="ml-2 px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                    {{ $event->service_type == 'rental' ? 'Alquiler' : 'Decoración' }}
-                </span>
-            @endif
-        </div>
-        
-        @if($event->status !== 'confirmed' && $event->status !== 'completed' && $event->status !== 'paid')
-            <div class="mt-4 flex gap-3">
-                <form action="{{ route('events.confirm', $event) }}" method="POST">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow">
-                        ✓ Confirmar Evento
-                    </button>
-                </form>
-                <a href="{{ route('events.edit', $event) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded shadow inline-block">
-                    ✏️ Editar
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div class="flex items-center space-x-4">
+                <a href="{{ route('calendar.index') }}" class="p-2 bg-gray-100 dark:bg-gray-800 rounded-xl text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>
-                <a href="{{ route('events.pdf', $event) }}" target="_blank" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow inline-block ml-2">
-                    📄 PDF
-                </a>
-            </div>
-        @else
-            <div class="mt-4">
-                <a href="{{ route('events.edit', $event) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded shadow inline-block">
-                    ✏️ Editar
-                </a>
-                <a href="{{ route('events.pdf', $event) }}" target="_blank" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow inline-block ml-2">
-                    📄 PDF
-                </a>
-            </div>
-        @endif
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-            <!-- Event & Client Details -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Información del Cliente</h3>
-                        <p class="text-gray-600 dark:text-gray-400"><span class="font-semibold">Nombre:</span> {{ $event->client->name }}</p>
-                        <p class="text-gray-600 dark:text-gray-400"><span class="font-semibold">Teléfono:</span> {{ $event->client->phone }}</p>
-                        @if($event->client->email)
-                            <p class="text-gray-600 dark:text-gray-400"><span class="font-semibold">Email:</span> {{ $event->client->email }}</p>
+                <div>
+                    <h2 class="font-display font-bold text-3xl text-gray-800 dark:text-white leading-tight">
+                        {{ $event->detail ? Str::limit($event->detail, 40) : 'Detalle del Evento' }}
+                    </h2>
+                    <div class="flex flex-wrap items-center gap-2 mt-2">
+                        <span class="text-gray-400 dark:text-gray-500 text-sm font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            {{ $event->event_date->translatedFormat('d F, Y') }}
+                        </span>
+                        @if($event->start_time)
+                            <span class="text-gray-400 dark:text-gray-500 text-sm font-medium flex items-center">
+                                <svg class="w-4 h-4 mr-1 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                {{ $event->start_time->format('H:i') }} {{ $event->end_time ? '- ' . $event->end_time->format('H:i') : '' }}
+                            </span>
+                        @endif
+                        @if($event->eventType)
+                            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-widest bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400 border border-primary-100 dark:border-primary-900/30">
+                                {{ $event->eventType->name }}
+                            </span>
+                        @endif
+                        @if($event->service_type)
+                            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-widest bg-gray-50 text-gray-500 dark:bg-gray-800 dark:text-gray-400 border border-gray-100 dark:border-gray-700">
+                                {{ $event->service_type == 'rental' ? 'Alquiler' : 'Decoración' }}
+                            </span>
                         @endif
                     </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Detalles del Evento</h3>
-                        <p class="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">{{ $event->detail }}</p>
-                        
-                        <!-- Status Badge in details -->
-                        <div class="mt-4">
-                            <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-semibold dark:bg-gray-700 dark:text-gray-200">
-                                Estado: {{ ucfirst($event->status) }}
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3 w-full md:w-auto">
+                @if($event->status !== 'confirmed' && $event->status !== 'completed' && $event->status !== 'paid')
+                    <form action="{{ route('events.confirm', $event) }}" method="POST" class="flex-1 md:flex-none">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="btn-primary w-full shadow-lg shadow-emerald-500/20 !bg-emerald-500 hover:!bg-emerald-600">
+                            Confirmar Evento
+                        </button>
+                    </form>
+                @endif
+                <a href="{{ route('events.edit', $event) }}" class="p-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl text-gray-400 hover:text-primary-600 transition-all shadow-sm" title="Editar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                </a>
+                <a href="{{ route('events.pdf', $event) }}" target="_blank" class="p-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl text-gray-400 hover:text-accent-600 transition-all shadow-sm" title="Descargar PDF">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </a>
+            </div>
+        </div>
+    </x-slot>
+
+    <div class="space-y-8">
+        <!-- Event & Client Details -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Client Card -->
+                <div class="premium-card p-8">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Información del Cliente</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-primary-50 dark:bg-primary-900/20 rounded-xl flex items-center justify-center text-primary-600 font-bold text-lg">
+                                {{ strtoupper(substr($event->client->name, 0, 1)) }}
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 dark:text-white">{{ $event->client->name }}</h4>
+                                <p class="text-xs text-gray-400 dark:text-gray-500">Cliente Principal</p>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-gray-100 dark:border-gray-700 space-y-3">
+                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                <svg class="w-4 h-4 mr-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                {{ $event->client->phone }}
+                            </div>
+                            @if($event->client->email)
+                                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                    <svg class="w-4 h-4 mr-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    {{ $event->client->email }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Info Card -->
+                <div class="premium-card p-8">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Estado y Notas</p>
+                    <div class="space-y-4">
+                        <div>
+                            <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 text-gray-800 rounded-full text-xs font-bold uppercase tracking-widest border border-gray-200 dark:border-gray-600">
+                                {{ ucfirst($event->status) }}
                             </span>
                         </div>
-
                         @if($event->notes)
-                            <div class="mt-4">
-                                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Notas Privadas / Condiciones:</h4>
-                                <p class="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap bg-gray-50 dark:bg-gray-700 p-3 rounded">{{ $event->notes }}</p>
+                            <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-900/20 rounded-2xl">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed whitespace-pre-wrap">{{ $event->notes }}</p>
                             </div>
                         @endif
-
                         @if($event->address)
-                            <div class="mt-4">
-                                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Dirección:</h4>
-                                <p class="text-gray-600 dark:text-gray-400 text-sm">{{ $event->address }}</p>
+                            <div class="flex items-start mt-4">
+                                <svg class="w-4 h-4 mr-3 mt-0.5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">{{ $event->address }}</p>
                             </div>
                         @endif
                     </div>
                 </div>
+            </div>
 
-                @if($event->latitude && $event->longitude)
-                    <div class="mt-6">
-                        <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Ubicación del Evento:</h4>
-                        <div id="map" class="rounded-lg border border-gray-300 dark:border-gray-600" style="height: 400px; width: 100%;"></div>
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Event Description Card -->
+                <div class="premium-card p-8 h-fit">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Descripción del Evento</p>
+                    <div class="prose dark:prose-invert max-w-none">
+                        <p class="text-gray-600 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">{{ $event->detail }}</p>
                     </div>
-                @endif
 
+                    @if($event->latitude && $event->longitude)
+                        <div class="mt-8 border-t border-gray-100 dark:border-gray-700 pt-8">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Ubicación</p>
+                            <div id="map" class="rounded-3xl border border-gray-100 dark:border-gray-700 shadow-inner overflow-hidden" style="height: 300px; width: 100%;"></div>
+                        </div>
+                    @endif
+                </div>
 
+                <!-- Reference Images -->
                 @if($event->images->count() > 0)
-                    <div class="mt-6">
-                        <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Imágenes de Referencia:</h4>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="premium-card p-8">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Imágenes de Referencia</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                             @foreach($event->images as $image)
-                                <div class="relative group">
+                                <div class="relative group aspect-square">
                                     <a href="{{ route('storage.serve', ['path' => $image->image_path]) }}" 
                                        data-fancybox="gallery" 
                                        data-caption="{{ $image->original_name }}"
-                                       class="block">
+                                       class="block w-full h-full">
                                         <img src="{{ route('storage.serve', ['path' => $image->image_path]) }}" 
                                              alt="{{ $image->original_name }}"
-                                             class="w-full object-contain rounded border border-gray-300 dark:border-gray-600 hover:opacity-75 transition cursor-pointer">
+                                             class="w-full h-full object-cover rounded-2xl border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform shadow-sm">
                                     </a>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">{{ $image->original_name }}</p>
                                     
                                     <!-- Delete Button -->
-                                    <form action="{{ route('events.images.destroy', [$event, $image]) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de eliminar esta imagen?')">
+                                    <form action="{{ route('events.images.destroy', [$event, $image]) }}" method="POST" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity translate-y-1 group-hover:translate-y-0 duration-300" onsubmit="return confirm('¿Estás seguro de eliminar esta imagen?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" 
-                                                class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
+                                        <button type="submit" class="bg-accent-500 text-white rounded-lg p-1.5 shadow-lg hover:bg-accent-600 transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                         </button>
                                     </form>
                                 </div>
@@ -130,126 +156,135 @@
                     </div>
                 @endif
             </div>
+        </div>
 
-            <!-- Financial Summary for Event -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <!-- Income -->
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <div class="text-gray-500 dark:text-gray-400 text-sm uppercase font-bold mb-2">Total Ingresos</div>
-                    <div class="text-3xl font-bold text-green-500">
-                        ${{ number_format($income, 2) }}
+        <!-- Financial Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="premium-card p-8 border-l-4 border-emerald-500">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 text-emerald-600/70">Total Ingresos</p>
+                <div class="flex items-end justify-between">
+                    <div class="text-3xl font-display font-bold text-gray-800 dark:text-white">${{ number_format($income, 2) }}</div>
+                    <div class="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl text-emerald-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                     </div>
                 </div>
-
-                <!-- Expense -->
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <div class="text-gray-500 dark:text-gray-400 text-sm uppercase font-bold mb-2">Total Gastos</div>
-                    <div class="text-3xl font-bold text-red-500">
-                        ${{ number_format($expense, 2) }}
+            </div>
+            <div class="premium-card p-8 border-l-4 border-accent-500">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 text-accent-600/70">Total Gastos</p>
+                <div class="flex items-end justify-between">
+                    <div class="text-3xl font-display font-bold text-gray-800 dark:text-white">${{ number_format($expense, 2) }}</div>
+                    <div class="p-2 bg-accent-50 dark:bg-accent-900/20 rounded-xl text-accent-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"></path></svg>
                     </div>
                 </div>
-
-                <!-- Balance -->
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <div class="text-gray-500 dark:text-gray-400 text-sm uppercase font-bold mb-2">Utilidad / Pérdida</div>
-                    <div class="text-3xl font-bold {{ $balance >= 0 ? 'text-blue-500' : 'text-red-500' }}">
+            </div>
+            <div class="premium-card p-8 border-l-4 {{ $balance >= 0 ? 'border-primary-500' : 'border-accent-500' }}">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 text-primary-600/70">Utilidad Estimada</p>
+                <div class="flex items-end justify-between">
+                    <div class="text-3xl font-display font-bold {{ $balance >= 0 ? 'text-gray-800 dark:text-white' : 'text-accent-600' }}">
                         ${{ number_format($balance, 2) }}
+                    </div>
+                    <div class="p-2 bg-primary-50 dark:bg-primary-900/20 rounded-xl text-primary-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <!-- Contracted Services / Presupuesto Items -->
+            <div class="xl:col-span-1">
+                <div class="premium-card h-full">
+                    <div class="p-8 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                        <h3 class="font-display font-bold text-lg text-gray-800 dark:text-white">Ítems / Presupuesto</h3>
+                        <span class="text-[10px] font-bold text-primary-500 uppercase tracking-widest bg-primary-50 dark:bg-primary-900/20 px-2 py-1 rounded-lg">
+                            {{ $event->items->count() }} Ítems
+                        </span>
+                    </div>
+                    <div class="p-8">
+                        @if($event->items->isEmpty())
+                            <p class="text-xs text-gray-400 text-center py-4 italic">No se han definido ítems para este presupuesto.</p>
+                        @else
+                            <ul class="space-y-6">
+                                @foreach($event->items as $item)
+                                    <li class="flex justify-between items-start group">
+                                        <div class="space-y-1">
+                                            <span class="block text-sm font-bold text-gray-800 dark:text-gray-100">{{ $item->product_name }}</span>
+                                            @if($item->description)
+                                                <span class="block text-[11px] text-gray-400 italic leading-snug">{{ $item->description }}</span>
+                                            @endif
+                                            <span class="block text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                                                {{ $item->quantity }} x ${{ number_format($item->unit_price, 2) }}
+                                            </span>
+                                        </div>
+                                        <span class="font-display font-bold text-gray-800 dark:text-white">${{ number_format($item->total, 2) }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                            <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Presupuestado</span>
+                                <span class="text-2xl font-display font-bold text-primary-600">${{ number_format($event->total_amount, 2) }}</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Contracted Services / Presupuesto Items -->
-                @if($event->items->isNotEmpty())
-                    <div class="md:col-span-1">
-                        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg h-full">
-                            <div class="p-6">
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Ítems / Presupuesto</h3>
-                                <div class="mb-4">
-                                    <ul class="space-y-3">
-                                        @foreach($event->items as $item)
-                                            <li class="flex justify-between items-start text-sm border-b dark:border-gray-700 pb-2">
-                                                <div class="flex-1">
-                                                    <span class="block text-gray-700 dark:text-gray-300 font-medium">{{ $item->product_name }}</span>
-                                                    @if($item->description)
-                                                        <span class="block text-xs text-gray-500 italic">{{ $item->description }}</span>
-                                                    @endif
-                                                    <span class="text-xs text-gray-500">{{ $item->quantity }} x ${{ number_format($item->unit_price, 2) }}</span>
-                                                </div>
-                                                <span class="font-bold text-gray-900 dark:text-gray-100 ml-2">${{ number_format($item->total, 2) }}</span>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                    <div class="flex justify-between items-center pt-2 mt-2">
-                                        <span class="font-bold text-gray-700 dark:text-gray-300">Total:</span>
-                                        <span class="font-bold text-indigo-600 dark:text-indigo-400 text-lg">${{ number_format($event->total_amount, 2) }}</span>
-                                    </div>
-                                </div>
-                            </div>
+            <!-- Transactions for this Event -->
+            <div class="xl:col-span-2">
+                <div class="premium-card overflow-hidden h-full">
+                    <div class="p-8 border-b border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h3 class="font-display font-bold text-lg text-gray-800 dark:text-white">Movimientos del Evento</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <a href="{{ route('transactions.index', ['create' => true, 'event_id' => $event->id, 'type' => 'income']) }}" 
+                               class="btn-primary !text-[10px] !py-2 !px-3 !bg-emerald-500 hover:!bg-emerald-600 shadow-emerald-500/10 whitespace-nowrap">
+                                + Registrar Ingreso
+                            </a>
+                            <a href="{{ route('transactions.index', ['create' => true, 'event_id' => $event->id, 'type' => 'expense']) }}" 
+                               class="btn-primary !text-[10px] !py-2 !px-3 !bg-accent-500 hover:!bg-accent-600 shadow-accent-500/10 whitespace-nowrap">
+                                - Registrar Gasto
+                            </a>
                         </div>
                     </div>
-                @endif
-
-                <!-- Transactions for this Event -->
-                @if($event->items->isNotEmpty())
-                    <div class="md:col-span-2">
-                @else
-                    <div class="md:col-span-3">
-                @endif
-                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6 text-gray-900 dark:text-gray-100">
-                            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                                <h3 class="text-lg font-bold">Movimientos del Evento</h3>
-                                <div class="flex gap-2">
-                                    <a href="{{ route('transactions.index', ['create' => true, 'event_id' => $event->id, 'type' => 'income']) }}" 
-                                    class="bg-green-600 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded inline-flex items-center">
-                                        + Registrar Ingreso
-                                    </a>
-                                    <a href="{{ route('transactions.index', ['create' => true, 'event_id' => $event->id, 'type' => 'expense']) }}" 
-                                    class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-2 px-4 rounded inline-flex items-center">
-                                        - Registrar Gasto
-                                    </a>
-                                </div>
+                    
+                    <div class="overflow-x-auto">
+                        @if($transactions->isEmpty())
+                            <div class="p-12 text-center">
+                                <p class="text-sm text-gray-400 font-medium italic">No hay movimientos registrados en este evento.</p>
                             </div>
-                            
-                            @if($transactions->isEmpty())
-                                <p class="text-center text-gray-500 py-4">No hay movimientos registrados en este evento.</p>
-                            @else
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                        <thead class="bg-gray-50 dark:bg-gray-700">
-                                            <tr>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Fecha</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Descripción</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Categoría</th>
-                                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Monto</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                            @foreach($transactions as $transaction)
-                                                <tr>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                                        {{ $transaction->date->format('d/m/Y') }}
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                        {{ $transaction->description }}
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" 
-                                                            style="background-color: {{ $transaction->category->color }}20; color: {{ $transaction->category->color }}">
-                                                            {{ $transaction->category->name }}
-                                                        </span>
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-bold {{ $transaction->type === 'income' ? 'text-green-500' : 'text-red-500' }}">
-                                                        {{ $transaction->type === 'income' ? '+' : '-' }} ${{ number_format($transaction->amount, 2) }}
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @endif
-                        </div>
+                        @else
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-50/50 dark:bg-gray-800/50">
+                                        <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Fecha</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Descripción</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Categoría</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] text-right">Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 dark:divide-gray-800 text-sm font-medium">
+                                    @foreach($transactions as $transaction)
+                                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap text-[11px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-widest">
+                                                {{ $transaction->date->format('d M, Y') }}
+                                            </td>
+                                            <td class="px-6 py-4 text-gray-800 dark:text-gray-200">
+                                                {{ $transaction->description }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-widest" 
+                                                      style="background-color: {{ $transaction->category->color }}15; color: {{ $transaction->category->color }}">
+                                                    {{ $transaction->category->name }}
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right font-display font-bold {{ $transaction->type === 'income' ? 'text-emerald-500' : 'text-accent-500' }}">
+                                                {{ $transaction->type === 'income' ? '+' : '-' }} ${{ number_format($transaction->amount, 2) }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -261,9 +296,7 @@
 
     @if($event->latitude && $event->longitude)
         <script>
-            // Define initMap BEFORE loading Google Maps API
             function initMap() {
-                // Small delay to ensure DOM is fully loaded
                 setTimeout(() => {
                     const location = {
                         lat: {{ $event->latitude }},
@@ -273,8 +306,24 @@
                     const map = new google.maps.Map(document.getElementById('map'), {
                         center: location,
                         zoom: 15,
-                        mapTypeControl: true,
-                        streetViewControl: true
+                        mapTypeControl: false,
+                        streetViewControl: false,
+                        styles: [
+                            {
+                                "featureType": "administrative",
+                                "elementType": "geometry",
+                                "stylers": [{"visibility": "off"}]
+                            },
+                            {
+                                "featureType": "poi",
+                                "stylers": [{"visibility": "off"}]
+                            },
+                            {
+                                "featureType": "road",
+                                "elementType": "labels.icon",
+                                "stylers": [{"visibility": "off"}]
+                            }
+                        ]
                     });
                     
                     new google.maps.Marker({
@@ -286,17 +335,13 @@
                 }, 100);
             }
         </script>
-        
-        <!-- Google Maps Script - loads AFTER initMap is defined -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDifDBJbSl3yI9WeNoqorVNCmwVunHLVwg&callback=initMap" async defer></script>
     @endif
 
     <!-- Fancybox JS -->
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
     <script>
-        // Initialize Fancybox
         Fancybox.bind("[data-fancybox='gallery']", {
-            // Options
             Toolbar: {
                 display: {
                     left: ["infobar"],

@@ -38,6 +38,7 @@ class Index extends Component
         session()->flash('success', 'Tipo de evento eliminado.');
     }
 
+    #[On('close-modal')]
     public function closeModal()
     {
         $this->showModal = false;

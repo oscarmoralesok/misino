@@ -95,6 +95,7 @@ class Index extends Component
         $this->resetPage();
     }
 
+    #[On('close-modal')]
     public function closeModal()
     {
         $this->showModal = false;

@@ -9,37 +9,26 @@
         <link rel="icon" href="{{ asset('img/icon.svg') }}">
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-gray-200 dark:bg-gray-900">
+    <body class="font-sans antialiased bg-gray-50 dark:bg-gray-950 text-gray-900 selection:bg-primary-100">
+        <!-- Background Decoration -->
+        <div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
+            <div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary-500/5 blur-[120px]"></div>
+            <div class="absolute top-[20%] -right-[5%] w-[30%] h-[30%] rounded-full bg-accent-500/5 blur-[100px]"></div>
+        </div>
+
         <div class="flex h-screen overflow-hidden">
             <!-- Desktop Sidebar -->
             @include('layouts.sidebar')
-
-            <!-- Mobile Sidebar Overlay & Sidebar (Simplified for now, reuse navigation for mobile toggle or implement later) -->
-            <!-- For now, we keep the original navigation for mobile hidden on desktop, but since we are changing layout, we need to adapt -->
             
             <div class="flex flex-col flex-1 w-0 overflow-hidden">
-                <!-- Mobile Header -->
-                <div class="md:hidden flex items-center justify-between bg-white border-b border-gray-200 px-4 py-2">
-                    <x-application-logo class="block h-8 w-auto" />
-                    <!-- Mobile Menu Button (using Alpine) -->
-                    <div x-data="{ open: false }" class="relative">
-                         <!-- Use the existing navigation component logic for mobile if needed, or simple dropdown -->
-                         <!-- For simplicity in this iteration, I'll rely on the existing navigation.blade.php but ONLY for mobile/tablet top bar if I include it, 
-                              BUT the prompt implies a design shift. I will include a simple mobile header here. -->
-                    </div>
-                </div>
-                
-                <!-- We need a Mobile Navigation handling. The easiest way is to wrap the sidebar in an optional off-canvas for mobile. 
-                    However, to keep it simple and robust:
-                    I will include the OLD 'layouts.navigation' ONLY for mobile (sm:block, md:hidden) 
-                    and the NEW 'layouts.sidebar' ONLY for desktop (md:block, hidden).
-                -->
+                <!-- Mobile Navigation (Old component, can be refined later if needed) -->
                 <div class="md:hidden">
                     @include('layouts.navigation')
                 </div>
@@ -49,16 +38,18 @@
 
                 <!-- Main Content -->
                 <main class="flex-1 relative overflow-y-auto focus:outline-none scroll-smooth">
-                    <div class="py-6">
-                        <div class="mx-auto px-4 sm:px-6 lg:px-16">
-                            <!-- Page Heading -->
+                    <div class="py-12">
+                        <div class="mx-auto px-6 sm:px-10 lg:px-20">
+                            <!-- Page Heading Refined -->
                             @isset($header)
-                                <div class="mb-6">
+                                <div class="mb-10 animate-fade-in">
                                     {{ $header }}
                                 </div>
                             @endisset
 
-                            {{ $slot }}
+                            <div class="animate-translate-up">
+                                {{ $slot }}
+                            </div>
                         </div>
                     </div>
                 </main>
