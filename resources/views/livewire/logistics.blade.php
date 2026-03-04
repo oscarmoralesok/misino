@@ -1,24 +1,21 @@
 <div>
-    <x-slot name="header">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div>
-                <h2 class="font-display font-bold text-3xl text-gray-800 dark:text-white leading-tight">
-                    {{ __('Logística Diaria') }}
-                </h2>
-                <p class="text-gray-400 dark:text-gray-500 text-sm mt-1 font-medium flex items-center">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                    Hoja de ruta para el personal de campo y depósitos.
-                </p>
-            </div>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+        <div>
+            <h2 class="font-display font-bold text-3xl text-gray-800 dark:text-white leading-tight">
+                {{ __('Logística Diaria') }}
+            </h2>
+            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1 font-medium flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                Hoja de ruta para el personal de campo y depósitos.
+            </p>
         </div>
-    </x-slot>
+        
+        <div class="flex items-center space-x-2 w-full md:w-auto">
+            <input type="date" wire:model.live="date" id="date" class="input-plain !py-2 !px-4 min-w-[200px] shadow-sm">
+        </div>
+    </div>
 
     <div class="space-y-6">
-        <div class="flex justify-end mb-4">
-            <div class="flex items-center space-x-2 w-full md:w-auto">
-                <input type="date" wire:model.live="date" id="date" class="input-plain !py-2 !px-4 min-w-[200px] shadow-sm">
-            </div>
-        </div>
         @forelse($events as $event)
             <div class="premium-card overflow-hidden group">
                 <div class="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-100 dark:divide-gray-800">
