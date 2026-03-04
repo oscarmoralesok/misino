@@ -17,11 +17,6 @@ class Logistics extends Component
         $this->date = request()->date ?? now()->format('Y-m-d');
     }
 
-    public function updatedDate()
-    {
-        // Livewire updates automatically
-    }
-
     public function render()
     {
         $events = Event::query()

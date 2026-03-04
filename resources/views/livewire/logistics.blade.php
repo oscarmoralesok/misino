@@ -10,14 +10,15 @@
                     Hoja de ruta para el personal de campo y depósitos.
                 </p>
             </div>
-            
-            <div class="flex items-center space-x-2 w-full md:w-auto">
-                <input type="date" wire:model.live="date" id="date" class="input-plain !py-2 !px-4 min-w-[200px] shadow-sm">
-            </div>
         </div>
     </x-slot>
 
     <div class="space-y-6">
+        <div class="flex justify-end mb-4">
+            <div class="flex items-center space-x-2 w-full md:w-auto">
+                <input type="date" wire:model.live="date" id="date" class="input-plain !py-2 !px-4 min-w-[200px] shadow-sm">
+            </div>
+        </div>
         @forelse($events as $event)
             <div class="premium-card overflow-hidden group">
                 <div class="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-100 dark:divide-gray-800">
