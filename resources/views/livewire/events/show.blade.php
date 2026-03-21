@@ -1,54 +1,59 @@
 <div>
     <x-slot name="header">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div class="flex items-center space-x-4">
-                <a href="{{ route('calendar.index') }}" class="p-2 bg-gray-100 dark:bg-gray-800 rounded-xl text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                </a>
-                <div>
-                    <h2 class="font-display font-bold text-3xl text-gray-800 dark:text-white leading-tight">
-                        {{ $event->detail ? Str::limit($event->detail, 40) : 'Detalle del Evento' }}
-                    </h2>
-                    <div class="flex flex-wrap items-center gap-2 mt-2">
-                        <span class="text-gray-400 dark:text-gray-500 text-sm font-medium flex items-center">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            {{ $event->event_date->translatedFormat('d F, Y') }}
-                        </span>
-                        @if($event->start_time)
-                            <span class="text-gray-400 dark:text-gray-500 text-sm font-medium flex items-center">
-                                <svg class="w-4 h-4 mr-1 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                {{ $event->start_time->format('H:i') }} {{ $event->end_time ? '- ' . $event->end_time->format('H:i') : '' }}
-                            </span>
-                        @endif
-                        @if($event->eventType)
-                            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-widest bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400 border border-primary-100 dark:border-primary-900/30">
-                                {{ $event->eventType->name }}
-                            </span>
-                        @endif
-                        @if($event->service_type)
-                            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-widest bg-gray-50 text-gray-500 dark:bg-gray-800 dark:text-gray-400 border border-gray-100 dark:border-gray-700">
-                                {{ $event->service_type == 'rental' ? 'Alquiler' : 'Decoración' }}
-                            </span>
-                        @endif
-                    </div>
+        <div class="flex items-center space-x-4">
+            <a href="{{ route('calendar.index') }}" class="p-2 bg-gray-100 dark:bg-gray-800 rounded-xl text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            </a>
+            <div>
+                <h2 class="font-display font-bold text-3xl text-gray-800 dark:text-white leading-tight">
+                    {{ $event->detail ? Str::limit($event->detail, 40) : 'Detalle del Evento' }}
+                </h2>
+                <div class="flex flex-wrap items-center gap-2 mt-2">
+                    <span class="text-gray-400 dark:text-gray-500 text-sm font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z"></path></svg>
+                        {{ $event->event_date->translatedFormat('d F, Y') }}
+                    </span>
                 </div>
-            </div>
-            
-            <div class="flex items-center space-x-3 w-full md:w-auto">
-                @if($event->status !== 'confirmed' && $event->status !== 'completed' && $event->status !== 'paid')
-                    <button wire:click="confirmEvent" class="flex-1 md:flex-none btn-primary shadow-lg shadow-emerald-500/20 !bg-emerald-500 hover:!bg-emerald-600">
-                        Confirmar Evento
-                    </button>
-                @endif
-                <a href="{{ route('events.edit', $event) }}" class="p-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl text-gray-400 hover:text-primary-600 transition-all shadow-sm" title="Editar">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                </a>
-                <a href="{{ route('events.pdf', $event) }}" target="_blank" class="p-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl text-gray-400 hover:text-accent-600 transition-all shadow-sm" title="Descargar PDF">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                </a>
             </div>
         </div>
     </x-slot>
+
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+        <div class="flex flex-wrap items-center gap-2">
+            @if($event->start_time)
+                <span class="text-gray-400 dark:text-gray-500 text-sm font-medium flex items-center">
+                    <svg class="w-4 h-4 mr-1 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    {{ $event->start_time->format('H:i') }} {{ $event->end_time ? '- ' . $event->end_time->format('H:i') : '' }}
+                </span>
+            @endif
+            @if($event->eventType)
+                <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-widest bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400 border border-primary-100 dark:border-primary-900/30">
+                    {{ $event->eventType->name }}
+                </span>
+            @endif
+            @if($event->service_type)
+                <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-widest bg-gray-50 text-gray-500 dark:bg-gray-800 dark:text-gray-400 border border-gray-100 dark:border-gray-700">
+                    {{ $event->service_type == 'rental' ? 'Alquiler' : 'Decoración' }}
+                </span>
+            @endif
+        </div>
+        
+        <div class="flex items-center space-x-3 w-full md:w-auto">
+            @if($event->status !== 'confirmed' && $event->status !== 'completed' && $event->status !== 'paid')
+                <button wire:click="confirmEvent" wire:loading.attr="disabled" class="flex-1 md:flex-none btn-primary shadow-lg shadow-emerald-500/20 !bg-emerald-500 hover:!bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span wire:loading.remove>Confirmar Evento</span>
+                    <span wire:loading>Procesando...</span>
+                </button>
+            @endif
+            <a href="{{ route('events.edit', $event) }}" class="p-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl text-gray-400 hover:text-primary-600 transition-all shadow-sm" title="Editar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            </a>
+            <a href="{{ route('events.pdf', $event) }}" target="_blank" class="p-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl text-gray-400 hover:text-accent-600 transition-all shadow-sm" title="Descargar PDF">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            </a>
+        </div>
+    </div>
+
 
     <div class="space-y-8">
         {{-- Success Message --}}
