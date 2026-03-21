@@ -28,9 +28,10 @@ Route::middleware('auth')->group(function () {
     // Events - Hybrid (Index=Livewire, Create/Edit/Show=Controller)
     Route::get('/events', App\Livewire\Events\Index::class)->name('events.index');
     Route::get('/events/create', App\Livewire\Events\CreateEdit::class)->name('events.create');
+    Route::get('/events/{event}', App\Livewire\Events\Show::class)->name('events.show');
     Route::get('/events/{event}/edit', App\Livewire\Events\CreateEdit::class)->name('events.edit');
     // Route::post('/events', [EventController::class, 'store'])->name('events.store'); // Removed
-    Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+    // Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show'); // Removed
     // Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update'); // Removed
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
     Route::patch('/events/{event}/confirm', [EventController::class, 'confirm'])->name('events.confirm');

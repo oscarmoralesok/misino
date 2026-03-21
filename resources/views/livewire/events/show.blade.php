@@ -1,4 +1,4 @@
-<x-app-layout>
+<div>
     <x-slot name="header">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div class="flex items-center space-x-4">
@@ -36,13 +36,9 @@
             
             <div class="flex items-center space-x-3 w-full md:w-auto">
                 @if($event->status !== 'confirmed' && $event->status !== 'completed' && $event->status !== 'paid')
-                    <form action="{{ route('events.confirm', $event) }}" method="POST" class="flex-1 md:flex-none">
-                        @csrf
-                        @method('PATCH')
-                        <button type="submit" class="btn-primary w-full shadow-lg shadow-emerald-500/20 !bg-emerald-500 hover:!bg-emerald-600">
-                            Confirmar Evento
-                        </button>
-                    </form>
+                    <button wire:click="confirmEvent" class="flex-1 md:flex-none btn-primary shadow-lg shadow-emerald-500/20 !bg-emerald-500 hover:!bg-emerald-600">
+                        Confirmar Evento
+                    </button>
                 @endif
                 <a href="{{ route('events.edit', $event) }}" class="p-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl text-gray-400 hover:text-primary-600 transition-all shadow-sm" title="Editar">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
@@ -55,6 +51,13 @@
     </x-slot>
 
     <div class="space-y-8">
+        {{-- Success Message --}}
+        @if (session()->has('success'))
+            <div class="animate-fade-in p-4 bg-emerald-50 border border-emerald-100 dark:bg-emerald-900/20 dark:border-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl text-sm font-medium">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <!-- Event & Client Details -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-1 space-y-6">
@@ -119,7 +122,7 @@
                     </div>
 
                     @if($event->latitude && $event->longitude)
-                        <div class="mt-8 border-t border-gray-100 dark:border-gray-700 pt-8">
+                        <div class="mt-8 border-t border-gray-100 dark:border-gray-700 pt-8" wire:ignore>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Ubicación</p>
                             <div id="map" class="rounded-3xl border border-gray-100 dark:border-gray-700 shadow-inner overflow-hidden" style="height: 300px; width: 100%;"></div>
                         </div>
@@ -132,7 +135,7 @@
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Imágenes de Referencia</p>
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                             @foreach($event->images as $image)
-                                <div class="relative group aspect-square">
+                                <div class="relative group aspect-square" wire:key="image-{{ $image->id }}">
                                     <a href="{{ route('storage.serve', ['path' => $image->image_path]) }}" 
                                        data-fancybox="gallery" 
                                        data-caption="{{ $image->original_name }}"
@@ -143,13 +146,11 @@
                                     </a>
                                     
                                     <!-- Delete Button -->
-                                    <form action="{{ route('events.images.destroy', [$event, $image]) }}" method="POST" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity translate-y-1 group-hover:translate-y-0 duration-300" onsubmit="return confirm('¿Estás seguro de eliminar esta imagen?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="bg-accent-500 text-white rounded-lg p-1.5 shadow-lg hover:bg-accent-600 transition-colors">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                        </button>
-                                    </form>
+                                    <button wire:click="deleteImage({{ $image->id }})" 
+                                            onclick="confirm('¿Estás seguro de eliminar esta imagen?') || event.stopImmediatePropagation()"
+                                            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity translate-y-1 group-hover:translate-y-0 duration-300 bg-accent-500 text-white rounded-lg p-1.5 shadow-lg hover:bg-accent-600 transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
                                 </div>
                             @endforeach
                         </div>
@@ -159,33 +160,44 @@
         </div>
 
         <!-- Financial Summary -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="premium-card p-8 border-l-4 border-emerald-500">
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 text-emerald-600/70">Total Ingresos</p>
                 <div class="flex items-end justify-between">
-                    <div class="text-3xl font-display font-bold text-gray-800 dark:text-white">${{ number_format($income, 2) }}</div>
+                    <div class="text-2xl font-display font-bold text-gray-800 dark:text-white">${{ number_format($income, 2) }}</div>
                     <div class="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl text-emerald-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                     </div>
                 </div>
             </div>
             <div class="premium-card p-8 border-l-4 border-accent-500">
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 text-accent-600/70">Total Gastos</p>
                 <div class="flex items-end justify-between">
-                    <div class="text-3xl font-display font-bold text-gray-800 dark:text-white">${{ number_format($expense, 2) }}</div>
+                    <div class="text-2xl font-display font-bold text-gray-800 dark:text-white">${{ number_format($expense, 2) }}</div>
                     <div class="p-2 bg-accent-50 dark:bg-accent-900/20 rounded-xl text-accent-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"></path></svg>
                     </div>
                 </div>
             </div>
             <div class="premium-card p-8 border-l-4 {{ $balance >= 0 ? 'border-primary-500' : 'border-accent-500' }}">
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 text-primary-600/70">Utilidad Estimada</p>
                 <div class="flex items-end justify-between">
-                    <div class="text-3xl font-display font-bold {{ $balance >= 0 ? 'text-gray-800 dark:text-white' : 'text-accent-600' }}">
+                    <div class="text-2xl font-display font-bold {{ $balance >= 0 ? 'text-gray-800 dark:text-white' : 'text-accent-600' }}">
                         ${{ number_format($balance, 2) }}
                     </div>
                     <div class="p-2 bg-primary-50 dark:bg-primary-900/20 rounded-xl text-primary-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="premium-card p-8 border-l-4 {{ $pendingBalance > 0 ? 'border-amber-500' : 'border-emerald-500' }}">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 {{ $pendingBalance > 0 ? 'text-amber-600/70' : 'text-emerald-600/70' }}">Saldo Pendiente</p>
+                <div class="flex items-end justify-between">
+                    <div class="text-2xl font-display font-bold {{ $pendingBalance > 0 ? 'text-amber-600' : 'text-emerald-600' }}">
+                        ${{ number_format($pendingBalance, 2) }}
+                    </div>
+                    <div class="p-2 {{ $pendingBalance > 0 ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-600' : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600' }} rounded-xl">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                 </div>
             </div>
@@ -207,7 +219,7 @@
                         @else
                             <ul class="space-y-6">
                                 @foreach($event->items as $item)
-                                    <li class="flex justify-between items-start group">
+                                    <li class="flex justify-between items-start group" wire:key="item-{{ $item->id }}">
                                         <div class="space-y-1">
                                             <span class="block text-sm font-bold text-gray-800 dark:text-gray-100">{{ $item->product_name }}</span>
                                             @if($item->description)
@@ -236,14 +248,14 @@
                     <div class="p-8 border-b border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <h3 class="font-display font-bold text-lg text-gray-800 dark:text-white">Movimientos del Evento</h3>
                         <div class="flex flex-wrap gap-2">
-                            <a href="{{ route('transactions.index', ['create' => true, 'event_id' => $event->id, 'type' => 'income']) }}" 
+                            <button wire:click="openCreateTransaction('income')" 
                                class="btn-primary !text-[10px] !py-2 !px-3 !bg-emerald-500 hover:!bg-emerald-600 shadow-emerald-500/10 whitespace-nowrap">
                                 + Registrar Ingreso
-                            </a>
-                            <a href="{{ route('transactions.index', ['create' => true, 'event_id' => $event->id, 'type' => 'expense']) }}" 
+                            </button>
+                            <button wire:click="openCreateTransaction('expense')" 
                                class="btn-primary !text-[10px] !py-2 !px-3 !bg-accent-500 hover:!bg-accent-600 shadow-accent-500/10 whitespace-nowrap">
                                 - Registrar Gasto
-                            </a>
+                            </button>
                         </div>
                     </div>
                     
@@ -260,11 +272,12 @@
                                         <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Descripción</th>
                                         <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Categoría</th>
                                         <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] text-right">Monto</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] text-center">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100 dark:divide-gray-800 text-sm font-medium">
                                     @foreach($transactions as $transaction)
-                                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+                                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors group" wire:key="transaction-{{ $transaction->id }}">
                                             <td class="px-6 py-4 whitespace-nowrap text-[11px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-widest">
                                                 {{ $transaction->date->format('d M, Y') }}
                                             </td>
@@ -280,6 +293,21 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-right font-display font-bold {{ $transaction->type === 'income' ? 'text-emerald-500' : 'text-accent-500' }}">
                                                 {{ $transaction->type === 'income' ? '+' : '-' }} ${{ number_format($transaction->amount, 2) }}
                                             </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex justify-center items-center space-x-1">
+                                                    <button wire:click="editTransaction({{ $transaction->id }})" 
+                                                            class="p-2 text-primary-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/10 rounded-xl transition-all"
+                                                            title="Editar">
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                    </button>
+                                                    <button onclick="confirm('¿Estás seguro de eliminar este movimiento?') || event.stopImmediatePropagation()" 
+                                                            wire:click="deleteTransaction({{ $transaction->id }})"
+                                                            class="p-2 text-accent-400 hover:text-accent-600 hover:bg-accent-50 dark:hover:bg-accent-900/10 rounded-xl transition-all"
+                                                            title="Eliminar">
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                    </button>
+                                                </div>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -291,49 +319,75 @@
         </div>
     </div>
 
+    {{-- Transaction Modal --}}
+    @if($showTransactionModal)
+        <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" wire:click="$set('showTransactionModal', false)"></div>
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-3xl bg-white dark:bg-gray-800 text-left shadow-premium transition-all sm:my-8 sm:w-full sm:max-w-2xl border border-gray-100 dark:border-gray-700 animate-translate-up">
+                    <livewire:transactions.create-edit 
+                        :transactionId="$editingTransactionId" 
+                        :eventId="$event->id"
+                        :type="$transactionType"
+                        :key="$editingTransactionId ? 'edit-'.$editingTransactionId : 'create-'.$event->id.'-'.$transactionType" 
+                    />
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Fancybox CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
 
     @if($event->latitude && $event->longitude)
         <script>
             function initMap() {
-                setTimeout(() => {
-                    const location = {
-                        lat: {{ $event->latitude }},
-                        lng: {{ $event->longitude }}
-                    };
-                    
-                    const map = new google.maps.Map(document.getElementById('map'), {
-                        center: location,
-                        zoom: 15,
-                        mapTypeControl: false,
-                        streetViewControl: false,
-                        styles: [
-                            {
-                                "featureType": "administrative",
-                                "elementType": "geometry",
-                                "stylers": [{"visibility": "off"}]
-                            },
-                            {
-                                "featureType": "poi",
-                                "stylers": [{"visibility": "off"}]
-                            },
-                            {
-                                "featureType": "road",
-                                "elementType": "labels.icon",
-                                "stylers": [{"visibility": "off"}]
-                            }
-                        ]
-                    });
-                    
-                    new google.maps.Marker({
-                        position: location,
-                        map: map,
-                        title: 'Ubicación del Evento',
-                        animation: google.maps.Animation.DROP
-                    });
-                }, 100);
+                const mapEl = document.getElementById('map');
+                if (!mapEl) return;
+                
+                const location = {
+                    lat: {{ $event->latitude }},
+                    lng: {{ $event->longitude }}
+                };
+                
+                const map = new google.maps.Map(mapEl, {
+                    center: location,
+                    zoom: 15,
+                    mapTypeControl: false,
+                    streetViewControl: false,
+                    styles: [
+                        {
+                            "featureType": "administrative",
+                            "elementType": "geometry",
+                            "stylers": [{"visibility": "off"}]
+                        },
+                        {
+                            "featureType": "poi",
+                            "stylers": [{"visibility": "off"}]
+                        },
+                        {
+                            "featureType": "road",
+                            "elementType": "labels.icon",
+                            "stylers": [{"visibility": "off"}]
+                        }
+                    ]
+                });
+                
+                new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: 'Ubicación del Evento',
+                    animation: google.maps.Animation.DROP
+                });
             }
+            
+            // Re-init map on livewire refresh
+            document.addEventListener('livewire:initialized', () => {
+                initMap();
+                Livewire.on('transaction-saved', () => {
+                   setTimeout(initMap, 100);
+                });
+            });
         </script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDifDBJbSl3yI9WeNoqorVNCmwVunHLVwg&callback=initMap" async defer></script>
     @endif
@@ -341,6 +395,18 @@
     <!-- Fancybox JS -->
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
     <script>
+        document.addEventListener('livewire:navigated', () => {
+            Fancybox.bind("[data-fancybox='gallery']", {
+                Toolbar: {
+                    display: {
+                        left: ["infobar"],
+                        middle: [],
+                        right: ["slideshow", "thumbs", "close"],
+                    },
+                },
+            });
+        });
+        
         Fancybox.bind("[data-fancybox='gallery']", {
             Toolbar: {
                 display: {
@@ -351,5 +417,4 @@
             },
         });
     </script>
-</x-app-layout>
-
+</div>
