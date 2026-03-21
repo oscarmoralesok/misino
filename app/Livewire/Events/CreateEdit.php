@@ -139,9 +139,10 @@ class CreateEdit extends Component
 
     public function addTransportCost($distanceKm)
     {
-        // Formula: (Km / 14) * 1950
-        // This implies 14 km/liter? and $1950/liter? Just applying the formula.
-        $totalCost = ($distanceKm / 14) * 1950;
+        $fuelPrice = \App\Models\Setting::where('key', 'fuel_price')->value('value') ?? 1950;
+        $kmPerLiter = \App\Models\Setting::where('key', 'km_per_liter')->value('value') ?? 14;
+
+        $totalCost = ($distanceKm / $kmPerLiter) * $fuelPrice;
 
         // 2. Format the item
         $transportItem = [
