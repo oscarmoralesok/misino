@@ -26,6 +26,37 @@
     <div :class="{'block animate-fade-in': open, 'hidden': ! open}" class="hidden lg:hidden border-t border-gray-50 dark:border-gray-800">
         <div class="px-6 py-8 space-y-8 max-h-[calc(100vh-80px)] overflow-y-auto">
             
+            <!-- Theme Switcher Mobile -->
+            <div class="space-y-4">
+                <div class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] px-2">Apariencia</div>
+                <div x-data="{ 
+                    theme: localStorage.theme || 'system',
+                    setTheme(val) {
+                        this.theme = val;
+                        localStorage.theme = val;
+                        if (val === 'dark' || (val === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                            document.documentElement.classList.add('dark');
+                        } else {
+                            document.documentElement.classList.remove('dark');
+                        }
+                    }
+                }" x-init="$watch('theme', val => setTheme(val)); setTheme(theme)" 
+                class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
+                    <button @click="setTheme('light')" :class="{ 'bg-white text-primary-600 shadow-sm': theme === 'light', 'text-gray-400': theme !== 'light' }" class="flex-1 flex items-center justify-center p-3 rounded-xl transition-all duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <span class="text-xs font-bold uppercase tracking-wider">Claro</span>
+                    </button>
+                    <button @click="setTheme('system')" :class="{ 'bg-white text-primary-600 shadow-sm': theme === 'system', 'text-gray-400': theme !== 'system' }" class="flex-1 flex items-center justify-center p-3 rounded-xl transition-all duration-200 mx-1">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <span class="text-xs font-bold uppercase tracking-wider">Auto</span>
+                    </button>
+                    <button @click="setTheme('dark')" :class="{ 'bg-white text-primary-600 shadow-sm': theme === 'dark', 'text-gray-400': theme !== 'dark' }" class="flex-1 flex items-center justify-center p-3 rounded-xl transition-all duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <span class="text-xs font-bold uppercase tracking-wider">Oscuro</span>
+                    </button>
+                </div>
+            </div>
+
             <!-- Menu Principal -->
             <div class="space-y-4">
                 <div class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] px-2">Menu Principal</div>
