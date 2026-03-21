@@ -321,16 +321,66 @@
 
     {{-- Transaction Modal --}}
     @if($showTransactionModal)
-        <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" wire:click="$set('showTransactionModal', false)"></div>
-            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <div class="relative transform overflow-hidden rounded-3xl bg-white dark:bg-gray-800 text-left shadow-premium transition-all sm:my-8 sm:w-full sm:max-w-2xl border border-gray-100 dark:border-gray-700 animate-translate-up">
+        <div class="fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" wire:click="$set('showTransactionModal', false)"></div>
+                <div class="relative bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-2xl w-full max-w-lg transform transition-all overflow-hidden border border-gray-100 dark:border-gray-800">
                     <livewire:transactions.create-edit 
                         :transactionId="$editingTransactionId" 
                         :eventId="$event->id"
                         :type="$transactionType"
                         :key="$editingTransactionId ? 'edit-'.$editingTransactionId : 'create-'.$event->id.'-'.$transactionType" 
                     />
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- Additional Contact Modal -->
+    @if($showContactModal)
+        <div class="fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
+                <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" wire:click="$set('showContactModal', false)"></div>
+                
+                <div class="relative inline-block align-bottom bg-white dark:bg-gray-900 rounded-[2.5rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-100 dark:border-gray-800">
+                    <div class="p-8">
+                        <div class="flex items-center justify-between mb-8">
+                            <div>
+                                <h3 class="font-display font-bold text-2xl text-gray-800 dark:text-white">Contacto Adicional</h3>
+                                <p class="text-gray-400 text-xs mt-1">Requerido para la confirmación del presupuesto.</p>
+                            </div>
+                            <button wire:click="$set('showContactModal', false)" class="p-2.5 rounded-2xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-gray-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+
+                        <form wire:submit.prevent="saveContactAndConfirm" class="space-y-6">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] pl-1">Nombre de Contacto</label>
+                                <input type="text" wire:model.defer="contact_name" class="input-plain w-full" placeholder="Ej: Maria Gomez">
+                                @error('contact_name') <span class="text-accent-500 text-[10px] font-bold uppercase mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] pl-1">Vínculo / Relación</label>
+                                <input type="text" wire:model.defer="contact_relationship" class="input-plain w-full" placeholder="Ej: Esposa, Hermano, etc.">
+                                @error('contact_relationship') <span class="text-accent-500 text-[10px] font-bold uppercase mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] pl-1">Teléfono de Contacto</label>
+                                <input type="text" wire:model.defer="contact_phone" class="input-plain w-full" placeholder="Ej: 3511234567">
+                                @error('contact_phone') <span class="text-accent-500 text-[10px] font-bold uppercase mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="pt-6 border-t border-gray-100 dark:border-gray-800">
+                                <button type="submit" class="btn-primary w-full shadow-soft flex items-center justify-center group">
+                                    <span>Guardar y Confirmar Evento</span>
+                                    <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

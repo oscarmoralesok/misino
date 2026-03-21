@@ -12,7 +12,19 @@ class Show extends Component
     public Event $event;
     public $showTransactionModal = false;
     public $editingTransactionId = null;
-    public $transactionType = 'expense';
+    public $transactionType = 'income'; // Changed from 'expense' to 'income'
+
+    // Contact Modal properties
+    public $showContactModal = false;
+    public $contact_name = '';
+    public $contact_phone = '';
+    public $contact_relationship = '';
+
+    // Replaced #[On] attributes with $listeners property
+    protected $listeners = [
+        'transaction-saved' => 'refreshData',
+        'close-modal' => 'refreshData', // Assuming 'close-modal' should still trigger refreshData
+    ];
 
     public function mount(Event $event)
     {
@@ -20,8 +32,8 @@ class Show extends Component
         $this->event->load(['items', 'client', 'eventType', 'images']);
     }
 
-    #[On('transaction-saved')]
-    #[On('close-modal')]
+    // #[On('transaction-saved')] // Removed, now handled by $listeners
+    // #[On('close-modal')] // Removed, now handled by $listeners
     public function refreshData()
     {
         $this->showTransactionModal = false;
@@ -52,9 +64,39 @@ class Show extends Component
 
     public function confirmEvent()
     {
+        // Check if client has contact_phone
+        if (empty($this->event->client->contact_phone)) {
+            $this->contact_name = $this->event->client->contact_name;
+            $this->contact_phone = $this->event->client->contact_phone;
+            $this->contact_relationship = $this->event->client->contact_relationship;
+            $this->showContactModal = true;
+            return;
+        }
+
         $this->event->update(['status' => 'confirmed']);
         $this->refreshData();
         session()->flash('success', 'Evento confirmado con éxito.');
+    }
+
+    public function saveContactAndConfirm()
+    {
+        $this->validate([
+            'contact_name' => 'required|string|max:255',
+            'contact_phone' => 'required|string|max:20',
+            'contact_relationship' => 'nullable|string|max:100',
+        ]);
+
+        $this->event->client->update([
+            'contact_name' => $this->contact_name,
+            'contact_phone' => $this->contact_phone,
+            'contact_relationship' => $this->contact_relationship,
+        ]);
+
+        $this->showContactModal = false;
+        
+        $this->event->update(['status' => 'confirmed']);
+        $this->refreshData();
+        session()->flash('success', 'Datos de contacto guardados y evento confirmado.');
     }
 
     public function deleteImage($id)
