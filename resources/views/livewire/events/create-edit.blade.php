@@ -138,10 +138,6 @@
                         </div>
                         <h3 class="font-display font-bold text-lg text-gray-800 dark:text-white uppercase tracking-widest">Presupuesto Detallado</h3>
                     </div>
-                    <button type="button" wire:click="addItem" class="text-[10px] font-bold bg-primary-500 text-white px-4 py-2 rounded-xl uppercase tracking-widest hover:bg-primary-600 transition-all shadow-md shadow-primary-500/20 active:scale-95 flex items-center">
-                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        Añadir Ítem
-                    </button>
                 </div>
 
                 {{-- Desktop View --}}
@@ -263,6 +259,15 @@
                             </div>
                         </div>
                     @endforeach
+                </div>
+
+                <div class="mt-6 flex justify-center md:justify-start">
+                    <button type="button" wire:click="addItem" class="text-[11px] font-bold bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-900/30 px-6 py-3 rounded-2xl uppercase tracking-widest hover:bg-primary-600 hover:text-white transition-all shadow-sm active:scale-95 flex items-center group">
+                        <div class="w-5 h-5 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mr-3 group-hover:bg-white/20 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        </div>
+                        Añadir Nuevo Ítem al Presupuesto
+                    </button>
                 </div>
 
                 {{-- Grand Total Section --}}
