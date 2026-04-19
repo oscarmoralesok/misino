@@ -65,6 +65,7 @@ class CreateEdit extends Component
             // Load items
             foreach ($event->items as $item) {
                 $this->items[] = [
+                    'id' => uniqid(),
                     'product_id' => $item->product_id,
                     'product_name' => $item->product_name, // Keep existing product_name for reference or custom items
                     'description' => $item->description, // Load user detail
@@ -84,6 +85,7 @@ class CreateEdit extends Component
             }
             // Add one empty item row by default
             $this->items[] = [
+                'id' => uniqid(),
                 'product_id' => '',
                 'product_name' => '',
                 'description' => '',
@@ -96,6 +98,7 @@ class CreateEdit extends Component
     public function addItem()
     {
         $this->items[] = [
+            'id' => uniqid(),
             'product_id' => '',
             'product_name' => '',
             'description' => '',
@@ -146,6 +149,7 @@ class CreateEdit extends Component
 
         // 2. Format the item
         $transportItem = [
+            'id' => uniqid(),
             'product_id' => '',
             'product_name' => 'Transporte',
             'quantity' => 4,
@@ -156,6 +160,7 @@ class CreateEdit extends Component
         $found = false;
         foreach ($this->items as $index => $item) {
             if ($item['product_name'] === 'Transporte') {
+                $transportItem['id'] = $item['id']; // preserve the old id to prevent jumping
                 $this->items[$index] = $transportItem;
                 $found = true;
                 break;

@@ -160,7 +160,7 @@
                                     $rowTotal = ((float)($item['quantity'] ?? 0)) * ((float)($item['unit_price'] ?? 0));
                                     $grandTotal += $rowTotal;
                                 @endphp
-                                <tr wire:key="item-desktop-{{ $index }}" class="group/row hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
+                                <tr wire:key="item-desktop-{{ $item['id'] ?? $index }}" class="group/row hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
                                     <td class="py-5 align-top">
                                         <select wire:model.live="items.{{ $index }}.product_id" class="input-plain w-full py-2.5 text-sm">
                                             <option value="">-- Personalizado --</option>
@@ -210,7 +210,7 @@
                             $rowTotal = ((float)($item['quantity'] ?? 0)) * ((float)($item['unit_price'] ?? 0));
                             $grandTotal += $rowTotal;
                         @endphp
-                        <div wire:key="item-mobile-{{ $index }}" class="p-5 border border-gray-100 dark:border-gray-700/50 rounded-2xl bg-gray-50/50 dark:bg-gray-800/30 space-y-4 relative">
+                        <div wire:key="item-mobile-{{ $item['id'] ?? $index }}" class="p-5 border border-gray-100 dark:border-gray-700/50 rounded-2xl bg-gray-50/50 dark:bg-gray-800/30 space-y-4 relative">
                             <button type="button" wire:click="removeItem({{ $index }})" class="absolute top-4 right-4 p-2 text-accent-300 hover:text-accent-500 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                             </button>
