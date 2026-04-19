@@ -192,7 +192,7 @@
                                         <span class="text-sm font-display font-bold text-gray-800 dark:text-gray-200 leading-[44px]">${{ number_format($rowTotal, 2) }}</span>
                                     </td>
                                     <td class="py-5 align-top text-center">
-                                        <button type="button" wire:click="removeItem({{ $index }})" class="p-2.5 text-gray-300 hover:text-accent-500 hover:bg-accent-50 dark:hover:bg-accent-900/10 rounded-xl transition-all mt-1">
+                                        <button type="button" wire:click="removeItem('{{ $item['id'] }}')" wire:confirm="¿Deseas eliminar permanentemente este ítem de la base de datos?" class="p-2.5 text-gray-300 hover:text-accent-500 hover:bg-accent-50 dark:hover:bg-accent-900/10 rounded-xl transition-all mt-1">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </button>
                                     </td>
@@ -211,7 +211,7 @@
                             $grandTotal += $rowTotal;
                         @endphp
                         <div wire:key="item-mobile-{{ $item['id'] ?? $index }}" class="p-5 border border-gray-100 dark:border-gray-700/50 rounded-2xl bg-gray-50/50 dark:bg-gray-800/30 space-y-4 relative">
-                            <button type="button" wire:click="removeItem({{ $index }})" class="absolute top-4 right-4 p-2 text-accent-300 hover:text-accent-500 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                            <button type="button" wire:click="removeItem('{{ $item['id'] }}')" wire:confirm="¿Deseas eliminar permanentemente este ítem de la base de datos?" class="absolute top-4 right-4 p-2 text-accent-300 hover:text-accent-500 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                             </button>
 

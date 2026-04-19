@@ -65,7 +65,7 @@ class CreateEdit extends Component
             // Load items
             foreach ($event->items as $item) {
                 $this->items[] = [
-                    'id' => uniqid(),
+                    'id' => $item->id, // Real DB ID
                     'product_id' => $item->product_id,
                     'product_name' => $item->product_name, // Keep existing product_name for reference or custom items
                     'description' => $item->description, // Load user detail
@@ -107,10 +107,26 @@ class CreateEdit extends Component
         ];
     }
 
-    public function removeItem($index)
+    public function removeItem($itemId)
     {
-        unset($this->items[$index]);
-        $this->items = array_values($this->items);
+        // Find index
+        $index = null;
+        foreach ($this->items as $idx => $item) {
+            if ($item['id'] == $itemId) {
+                $index = $idx;
+                break;
+            }
+        }
+
+        if ($index !== null) {
+            unset($this->items[$index]);
+            $this->items = array_values($this->items);
+        }
+
+        // Si es numérico, significa que viene de la BD y debe eliminarse
+        if (is_numeric($itemId)) {
+            \App\Models\EventItem::find($itemId)?->delete();
+        }
     }
 
     public function updatedItems($value, $key)
