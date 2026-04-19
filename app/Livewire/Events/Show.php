@@ -81,8 +81,8 @@ class Show extends Component
     public function saveContactAndConfirm()
     {
         $this->validate([
-            'contact_name' => 'required|string|max:255',
-            'contact_phone' => 'required|string|max:20',
+            'contact_name' => 'nullable|string|max:255',
+            'contact_phone' => 'nullable|string|max:20',
             'contact_relationship' => 'nullable|string|max:100',
         ]);
 

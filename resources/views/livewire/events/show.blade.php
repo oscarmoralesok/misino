@@ -352,7 +352,7 @@
                         <div class="flex items-center justify-between mb-8">
                             <div>
                                 <h3 class="font-display font-bold text-2xl text-gray-800 dark:text-white">Contacto Adicional</h3>
-                                <p class="text-gray-400 text-xs mt-1">Requerido para la confirmación del presupuesto.</p>
+                                <p class="text-gray-400 text-xs mt-1">Opcional. Datos de alguien más a contactar en caso de emergencia.</p>
                             </div>
                             <button wire:click="$set('showContactModal', false)" class="p-2.5 rounded-2xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-gray-600 transition-colors">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
