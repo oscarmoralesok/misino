@@ -36,7 +36,7 @@
                                 }
                                 
                                 $message = "Hola {$firstName}! 😊 ¿Cómo estás?\n\nQuería consultarte si pudiste ver el presupuesto y si te surgió alguna duda o hay algo que te gustaría ajustar. Si querés, también podemos evaluar otras opciones que se adapten mejor.\n\nRecordá que podés pagarlo con tarjeta a través de Mercado Pago, por si eso te resulta más cómodo.\n\nQuedo atenta a tu respuesta. ¡Que tengas un lindo día! ✨";
-                                $waLink = "https://web.whatsapp.com/send?phone={$phone}&text=" . urlencode($message);
+                                $waLink = "https://wa.me/{$phone}?text=" . urlencode($message);
                             @endphp
                             <tr class="group hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-all">
                                 <td class="px-8 py-6">
