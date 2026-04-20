@@ -81,7 +81,7 @@
                                 
                                 <div class="flex items-center gap-2 mt-1">
                                     <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 dark:bg-gray-800/50 px-1.5 py-0.5 rounded">
-                                        {{ (int) now()->startOfDay()->diffInDays($event->created_at->startOfDay()) }} d
+                                        {{ $event->created_at->diffForHumans() }}
                                     </span>
                                     @if($event->last_follow_up_at)
                                         <span class="text-[9px] font-bold text-primary-500 uppercase tracking-widest flex items-center">

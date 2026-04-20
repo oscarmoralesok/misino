@@ -25,7 +25,7 @@
                     <tbody class="divide-y divide-gray-50 dark:divide-gray-800/50">
                         @forelse($events as $event)
                             @php
-                                $daysAgo = (int) now()->startOfDay()->diffInDays($event->created_at->startOfDay());
+                                $daysAgo = abs((int) $event->created_at->startOfDay()->diffInDays(now()->startOfDay()));
                                 $clientName = $event->client->name ?? 'Cliente';
                                 $phone = preg_replace('/[^0-9]/', '', $event->client->phone ?? '');
                                 
@@ -58,7 +58,7 @@
                                 <td class="px-8 py-6 text-center">
                                     <div class="flex items-center justify-center space-x-2">
                                         <span class="text-sm font-bold {{ $daysAgo >= 5 ? 'text-accent-500' : 'text-gray-700 dark:text-gray-300' }}">
-                                            {{ $daysAgo }}
+                                            {{ $event->created_at->diffForHumans() }}
                                         </span>
                                         @if($daysAgo >= 5)
                                             <span class="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse"></span>
