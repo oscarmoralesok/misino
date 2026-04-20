@@ -25,7 +25,7 @@
                     <tbody class="divide-y divide-gray-50 dark:divide-gray-800/50">
                         @forelse($events as $event)
                             @php
-                                $daysAgo = now()->diffInDays($event->created_at);
+                                $daysAgo = (int) now()->startOfDay()->diffInDays($event->created_at->startOfDay());
                                 $clientName = $event->client->name ?? 'Cliente';
                                 $phone = preg_replace('/[^0-9]/', '', $event->client->phone ?? '');
                                 
