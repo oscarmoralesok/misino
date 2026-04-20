@@ -17,7 +17,7 @@
                         <tr class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] border-b border-gray-100 dark:border-gray-800">
                             <th class="px-8 py-5">Cliente</th>
                             <th class="px-8 py-5">Estado</th>
-                            <th class="px-8 py-5">Días sin Respuesta</th>
+                            <th class="px-8 py-5 text-center"># Días</th>
                             <th class="px-8 py-5">Último Seguimiento</th>
                             <th class="px-8 py-5 text-right">Acción</th>
                         </tr>
@@ -25,7 +25,7 @@
                     <tbody class="divide-y divide-gray-50 dark:divide-gray-800/50">
                         @forelse($events as $event)
                             @php
-                                $daysAgo = now()->diffInDays($event->updated_at);
+                                $daysAgo = now()->diffInDays($event->created_at);
                                 $clientName = $event->client->name ?? 'Cliente';
                                 $phone = preg_replace('/[^0-9]/', '', $event->client->phone ?? '');
                                 
@@ -35,7 +35,7 @@
                                 }
                                 
                                 $message = "Hola {$clientName}! 😊 ¿Cómo estás?\n\nQuería consultarte si pudiste ver el presupuesto y si te surgió alguna duda o hay algo que te gustaría ajustar. Si querés, también podemos evaluar otras opciones que se adapten mejor.\n\nRecordá que podés pagarlo con tarjeta a través de Mercado Pago, por si eso te resulta más cómodo.\n\nQuedo atenta a tu respuesta. ¡Que tengas un lindo día! ✨";
-                                $waLink = "https://wa.me/{$phone}?text=" . urlencode($message);
+                                $waLink = "https://web.whatsapp.com/send?phone={$phone}&text=" . urlencode($message);
                             @endphp
                             <tr class="group hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-all">
                                 <td class="px-8 py-6">
@@ -55,13 +55,13 @@
                                         {{ $event->status === 'sent' ? 'Enviado' : 'Pendiente' }}
                                     </span>
                                 </td>
-                                <td class="px-8 py-6">
-                                    <div class="flex items-center space-x-2">
+                                <td class="px-8 py-6 text-center">
+                                    <div class="flex items-center justify-center space-x-2">
                                         <span class="text-sm font-bold {{ $daysAgo >= 5 ? 'text-accent-500' : 'text-gray-700 dark:text-gray-300' }}">
-                                            {{ $daysAgo }} días
+                                            {{ $daysAgo }}
                                         </span>
                                         @if($daysAgo >= 5)
-                                            <span class="w-2 h-2 rounded-full bg-accent-500 animate-pulse"></span>
+                                            <span class="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse"></span>
                                         @endif
                                     </div>
                                 </td>

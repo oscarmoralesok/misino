@@ -98,11 +98,25 @@
                 <div class="premium-card p-8">
                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Estado y Notas</p>
                     <div class="space-y-4">
-                        <div>
-                            <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 text-gray-800 rounded-full text-xs font-bold uppercase tracking-widest border border-gray-200 dark:border-gray-600">
-                                {{ ucfirst($event->status) }}
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-500 dark:text-gray-400 font-medium tracking-wide">Estado Actual</span>
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold tracking-[0.1em] uppercase {{ $currentClass ?? 'bg-gray-50 text-gray-600' }}">
+                                {{ $event->status }}
                             </span>
                         </div>
+                        
+                        @if($event->last_follow_up_at)
+                            <div class="pt-4 border-t border-gray-50 dark:border-gray-800">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-[10px] font-bold text-primary-500 uppercase tracking-widest">Último Seguimiento</span>
+                                    <span class="text-[11px] text-gray-400 font-medium">{{ \Carbon\Carbon::parse($event->last_follow_up_at)->format('d/m/Y H:i') }}</span>
+                                </div>
+                                <p class="text-[11px] text-gray-400 font-medium">
+                                    Se contactó al cliente {{ \Carbon\Carbon::parse($event->last_follow_up_at)->diffForHumans() }} vía WhatsApp.
+                                </p>
+                            </div>
+                        @endif
+
                         @if($event->notes)
                             <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-900/20 rounded-2xl">
                                 <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed whitespace-pre-wrap">{{ $event->notes }}</p>

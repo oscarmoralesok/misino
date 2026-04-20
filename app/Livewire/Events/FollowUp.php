@@ -32,11 +32,11 @@ class FollowUp extends Component
         
         $query = Event::with('client')
             ->whereIn('status', ['sent', 'pending'])
-            ->where('updated_at', '<=', now()->subDays(3))
-            ->where('updated_at', '>=', now()->subDays(7));
+            ->where('created_at', '<=', now()->subDays(3))
+            ->where('created_at', '>=', now()->subDays(7));
 
         // Order by age (oldest first)
-        $events = $query->orderBy('updated_at', 'asc')->paginate(10);
+        $events = $query->orderBy('created_at', 'asc')->paginate(10);
 
         return view('livewire.events.follow-up', [
             'events' => $events
