@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/event-types', App\Livewire\EventTypes\Index::class)->name('event-types.index');
     Route::get('/calendar', App\Livewire\Calendar::class)->name('calendar.index');
     Route::get('/logistics', App\Livewire\Logistics::class)->name('logistics.index'); // Logistics Module
+    Route::get('/events-follow-up', App\Livewire\Events\FollowUp::class)->name('events.follow-up'); // Follow-up Module
     Route::get('/settings', App\Livewire\Settings\Index::class)->name('settings.index'); // System Settings
     
     // Serve storage files fallback

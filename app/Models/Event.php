@@ -23,6 +23,7 @@ class Event extends Model
         'service_type',
         'event_type_id',
         'status',
+        'last_follow_up_at',
         'total_amount',
         'notes',
     ];
