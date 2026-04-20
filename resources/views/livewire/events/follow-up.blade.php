@@ -26,7 +26,8 @@
                         @forelse($events as $event)
                             @php
                                 $daysAgo = abs((int) $event->created_at->startOfDay()->diffInDays(now()->startOfDay()));
-                                $clientName = $event->client->name ?? 'Cliente';
+                                $clientFullName = $event->client->name ?? 'Cliente';
+                                $firstName = explode(' ', trim($clientFullName))[0];
                                 $phone = preg_replace('/[^0-9]/', '', $event->client->phone ?? '');
                                 
                                 // Ensure number has country code (Argentina logic)
@@ -34,17 +35,17 @@
                                     $phone = '549' . $phone;
                                 }
                                 
-                                $message = "Hola {$clientName}! 😊 ¿Cómo estás?\n\nQuería consultarte si pudiste ver el presupuesto y si te surgió alguna duda o hay algo que te gustaría ajustar. Si querés, también podemos evaluar otras opciones que se adapten mejor.\n\nRecordá que podés pagarlo con tarjeta a través de Mercado Pago, por si eso te resulta más cómodo.\n\nQuedo atenta a tu respuesta. ¡Que tengas un lindo día! ✨";
+                                $message = "Hola {$firstName}! 😊 ¿Cómo estás?\n\nQuería consultarte si pudiste ver el presupuesto y si te surgió alguna duda o hay algo que te gustaría ajustar. Si querés, también podemos evaluar otras opciones que se adapten mejor.\n\nRecordá que podés pagarlo con tarjeta a través de Mercado Pago, por si eso te resulta más cómodo.\n\nQuedo atenta a tu respuesta. ¡Que tengas un lindo día! ✨";
                                 $waLink = "https://web.whatsapp.com/send?phone={$phone}&text=" . urlencode($message);
                             @endphp
                             <tr class="group hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-all">
                                 <td class="px-8 py-6">
                                     <div class="flex items-center">
                                         <div class="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/30 text-primary-600 flex items-center justify-center font-bold text-sm mr-4">
-                                            {{ substr($clientName, 0, 1) }}
+                                            {{ substr($clientFullName, 0, 1) }}
                                         </div>
                                         <div>
-                                            <p class="text-sm font-bold text-gray-800 dark:text-white">{{ $clientName }}</p>
+                                            <p class="text-sm font-bold text-gray-800 dark:text-white">{{ $clientFullName }}</p>
                                             <p class="text-[11px] text-gray-400 font-medium">{{ $event->client->phone }}</p>
                                         </div>
                                     </div>
