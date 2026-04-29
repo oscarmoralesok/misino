@@ -287,6 +287,7 @@
                 <li>• Se mantiene congelado el precio</li>
                 <li>• <img src="{{ public_path('img/pdf/pin.png') }}" style="width: 12px; vertical-align: middle;"> Las fechas para Candy Bar y decoración se encuentran con mucha demanda.</li>
                 <li>• <img src="{{ public_path('img/pdf/hand.png') }}" style="width: 12px; vertical-align: middle;"> Te recomendamos confirmar lo antes posible para asegurar tu lugar.</li>
+                <li>• La decoración es una propuesta artística y no una copia exacta de referencias. El diseño final puede variar según los elementos seleccionados y las condiciones estéticas del lugar del evento.</li>
             </ul>
         </div>
 
