@@ -125,12 +125,28 @@
                 padding: 5px;
                 text-align: center;
             }
+
             .gallery-img {
                 width: auto;
                 height: 120px;
                 object-fit: contain;
                 border: 1px solid #ddd;
                 padding: 2px;
+            }
+
+            .alert-box {
+                color: #fa3535;
+                font-size: 0.9em;
+                margin-top: 30px;
+                padding: 15px;
+                border: 2px solid #eb7d7d;
+                background-color: #fdf9f9;
+                border-radius: 10px;
+                line-height: 1.2;
+            }
+            .alert-box strong {
+                color: #fa3535;
+                text-transform: uppercase;
             }
         </style>
     </head>
@@ -257,9 +273,15 @@
                 </table>
             </div>
         @endif
+        
+        <div class="alert-box">
+            <strong>IMPORTANTE:</strong>
+            Las guirnaldas de globos y elementos decorativos forman parte exclusiva del servicio de alquiler. 
+            No está permitido el retiro, traslado o manipulación de las mismas fuera del lugar del evento por parte del cliente o invitados.
+        </div>
 
         <div style="margin-top: 30px; font-size: 0.85em; color: #333;">
-            <strong style="text-transform: uppercase;">SE REQUIERE DE UN ANTICIPO DEL 20%</strong>
+            <strong style="text-transform: uppercase;">SE REQUIERE DE UN ANTICIPO DEL 30%</strong>
             <ul style="padding-left: 0; margin-top: 10px; list-style-type: none; line-height: 1.2;">
                 <li>• Con la seña aseguras la fecha</li>
                 <li>• Se mantiene congelado el precio</li>
