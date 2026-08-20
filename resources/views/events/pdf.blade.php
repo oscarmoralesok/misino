@@ -143,10 +143,14 @@
                 background-color: #fdf9f9;
                 border-radius: 10px;
                 line-height: 1.2;
+                page-break-inside: avoid;
             }
             .alert-box strong {
                 color: #fa3535;
                 text-transform: uppercase;
+            }
+            tr {
+                page-break-inside: avoid;
             }
         </style>
     </head>
@@ -280,7 +284,7 @@
             No está permitido el retiro, traslado o manipulación de las mismas fuera del lugar del evento por parte del cliente o invitados.
         </div>
 
-        <div style="margin-top: 30px; font-size: 0.85em; color: #333;">
+        <div style="margin-top: 30px; font-size: 0.85em; color: #333; page-break-inside: avoid;">
             <strong style="text-transform: uppercase;">SE REQUIERE DE UN ANTICIPO DEL 30%</strong>
             <ul style="padding-left: 0; margin-top: 10px; list-style-type: none; line-height: 1.2;">
                 <li>• Con la seña aseguras la fecha</li>
