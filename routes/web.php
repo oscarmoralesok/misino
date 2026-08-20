@@ -152,7 +152,15 @@ Route::get('/debug-logs', function () {
 
 Route::get('/test-pdf', function () {
     try {
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML('<h1>Test PDF Generation</h1><p>If you see this, DomPDF is working fine.</p>');
+        $headerPath = public_path('img/pdf/header.png');
+        $html = '<h1>Test Image</h1><p>Path: ' . $headerPath . '</p>';
+        if (file_exists($headerPath)) {
+            $html .= '<img src="' . $headerPath . '" style="width: 100%; height: auto;" />';
+        } else {
+            $html .= '<p>File does not exist.</p>';
+        }
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
         return $pdf->download('test.pdf');
     } catch (\Throwable $e) {
         return response()->json([
