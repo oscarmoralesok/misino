@@ -239,14 +239,14 @@
             </tfoot>
         </table>
 
-        {{-- @if($event->notes)
+        @if($event->notes)
             <div style="margin-top: 30px; font-size: 0.9em;">
                 <strong>NOTAS:</strong> <br>
                 {!! nl2br(e($event->notes)) !!}
             </div>
         @endif
 
-        <!-- Image Gallery -->
+        {{-- <!-- Image Gallery -->
         @if($event->images->count() > 0)
             <!-- Page Break if needed -->
             <div style="page-break-inside: avoid;">
