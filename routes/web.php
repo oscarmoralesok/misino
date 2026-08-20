@@ -336,3 +336,53 @@ Route::get('/test-pdf-event-no-images/{id}', function ($id) {
     }
 });
 
+Route::get('/test-pdf-custom-html/{id}', function ($id) {
+    try {
+        ini_set('memory_limit', '512M');
+        set_time_limit(120);
+
+        $event = \App\Models\Event::findOrFail($id);
+        $event->load(['client', 'items', 'images']);
+        
+        $html = view('events.pdf', compact('event'))->render();
+        
+        if (request()->has('no_css')) {
+            $html = preg_replace('/<style>.*?<\/style>/s', '', $html);
+        }
+        if (request()->has('no_header_footer')) {
+            $html = preg_replace('/<header>.*?<\/header>/s', '', $html);
+            $html = preg_replace('/<footer>.*?<\/footer>/s', '', $html);
+        }
+        if (request()->has('no_table')) {
+            $html = preg_replace('/<table class="items-table">.*?<\/table>/s', '', $html);
+        }
+        if (request()->has('no_info_table')) {
+            $html = preg_replace('/<table class="info-table">.*?<\/table>/s', '', $html);
+        }
+        if (request()->has('no_alert')) {
+            $html = preg_replace('/<div class="alert-box">.*?<\/div>/s', '', $html);
+        }
+        if (request()->has('no_notes')) {
+            $html = preg_replace('/NOTAS:.*?<\/div>/s', '', $html);
+        }
+        if (request()->has('no_terms')) {
+            // Remove the block at the bottom
+            $html = preg_replace('/<div style="margin-top: 30px; font-size: 0.85em; color: #333;">.*?<\/div>/s', '', $html);
+        }
+        
+        if (request()->has('raw_html')) {
+            return $html;
+        }
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
+        return $pdf->download('test-custom.pdf');
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => explode("\n", $e->getTraceAsString())
+        ], 500);
+    }
+});
+
