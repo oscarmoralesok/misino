@@ -45,10 +45,21 @@ class Index extends Component
     {
         $product = Product::findOrFail($id);
         
+        // Delete image if exists
+        if ($product->image) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+        }
+        
         $product->delete();
         
         session()->flash('success', 'Producto eliminado.');
         $this->resetPage();
+    }
+
+    public function toggleWeb($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->update(['show_in_web' => !$product->show_in_web]);
     }
 
     public function closeModal()

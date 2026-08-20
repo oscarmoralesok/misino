@@ -12,6 +12,10 @@ class TransactionController extends Controller
      */
     public function downloadReceipt(Transaction $transaction)
     {
+        // Increase memory and execution time limits for PDF generation
+        ini_set('memory_limit', '512M');
+        set_time_limit(120);
+
         // Load necessary relationships
         $transaction->load(['event.client', 'event.eventType', 'category']);
         

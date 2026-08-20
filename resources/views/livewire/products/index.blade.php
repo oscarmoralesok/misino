@@ -44,6 +44,7 @@
                             <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Producto</th>
                             <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Descripción</th>
                             <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Precio Base</th>
+                            <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] text-center">Web</th>
                             <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] text-center">Acciones</th>
                         </tr>
                     </thead>
@@ -51,8 +52,17 @@
                         @forelse($products as $product)
                         <tr wire:key="product-{{ $product->id }}" class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors group">
                             <td class="px-6 py-4">
-                                <div class="text-sm font-bold text-gray-800 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                                    {{ $product->name }}
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                                        @if($product->image_url)
+                                            <img src="{{ $product->image_url }}" class="w-full h-full object-cover" alt="{{ $product->name }}">
+                                        @else
+                                            <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        @endif
+                                    </div>
+                                    <div class="text-sm font-bold text-gray-800 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                                        {{ $product->name }}
+                                    </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4">
@@ -64,6 +74,22 @@
                                 <div class="text-sm font-display font-bold text-gray-900 dark:text-gray-100">
                                     ${{ number_format($product->base_price, 2) }}
                                 </div>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <button wire:click="toggleWeb({{ $product->id }})" 
+                                        class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all
+                                        {{ $product->show_in_web 
+                                            ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 hover:bg-emerald-100' 
+                                            : 'bg-gray-100 text-gray-400 dark:bg-gray-800 hover:bg-gray-200' }}"
+                                        title="{{ $product->show_in_web ? 'Visible en la web — click para ocultar' : 'Oculto — click para mostrar en la web' }}">
+                                    @if($product->show_in_web)
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        Visible
+                                    @else
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
+                                        Oculto
+                                    @endif
+                                </button>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex justify-center space-x-1">
@@ -83,7 +109,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-20 text-center">
+                            <td colspan="5" class="px-6 py-20 text-center">
                                 <div class="flex flex-col items-center">
                                     <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-full mb-4">
                                         <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>

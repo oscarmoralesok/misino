@@ -57,7 +57,11 @@ class EventController extends Controller
 
     public function downloadPdf(Event $event)
     {
-        $event->load(['client', 'items']);
+        // Increase memory and execution time limits for PDF generation
+        ini_set('memory_limit', '512M');
+        set_time_limit(120);
+
+        $event->load(['client', 'items', 'images']);
         
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('events.pdf', compact('event'));
         

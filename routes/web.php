@@ -9,6 +9,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Web Builder (Public)
+Route::get('/disena-tu-evento', App\Livewire\Web\Builder::class)->name('web.builder');
+
 Route::get('/dashboard', App\Livewire\Dashboard::class)->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
