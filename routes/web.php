@@ -53,8 +53,49 @@ require __DIR__.'/auth.php';
 Route::get('/debug-logs', function () {
     $results = [];
     
-    // Who is the PHP user?
-    $results['whoami'] = exec('whoami');
+    // Native function to read last lines of a file
+    $getLastLinesNative = function ($filepath, $numLines = 100) {
+        if (!file_exists($filepath) || !is_readable($filepath)) {
+            return 'File not readable or does not exist';
+        }
+        
+        $fp = fopen($filepath, 'r');
+        if (!$fp) return 'Cannot open file';
+        
+        // Seek from the end of file
+        fseek($fp, 0, SEEK_END);
+        $size = ftell($fp);
+        
+        if ($size === 0) {
+            fclose($fp);
+            return '';
+        }
+        
+        $pos = -2; // Start before the EOF newline
+        $lineCount = 0;
+        
+        while ($lineCount < $numLines && $size + $pos >= 0) {
+            fseek($fp, $pos, SEEK_END);
+            $char = fgetc($fp);
+            if ($char === "\n") {
+                $lineCount++;
+            }
+            $pos--;
+        }
+        
+        // Read the content from this position to the end
+        if ($size + $pos < 0) {
+            fseek($fp, 0); // start of file
+        } else {
+            fseek($fp, $pos + 2, SEEK_END);
+        }
+        
+        $text = fread($fp, $size);
+        fclose($fp);
+        return $text;
+    };
+    
+    $results['current_user_name'] = get_current_user();
     
     // Check relative error_log file paths
     $possibleRelativeLogs = [
@@ -71,7 +112,7 @@ Route::get('/debug-logs', function () {
                 'path' => $path,
                 'readable' => is_readable($path),
                 'size' => filesize($path),
-                'content' => is_readable($path) ? shell_exec('tail -n 100 ' . escapeshellarg($path)) : 'Not readable'
+                'content' => is_readable($path) ? $getLastLinesNative($path, 100) : 'Not readable'
             ];
         }
     }
@@ -84,7 +125,7 @@ Route::get('/debug-logs', function () {
         $results['laravel_log_readable'] = is_readable($laravelLog);
         $results['laravel_log_size'] = filesize($laravelLog);
         if (is_readable($laravelLog)) {
-            $results['laravel_log'] = shell_exec('tail -n 100 ' . escapeshellarg($laravelLog));
+            $results['laravel_log'] = $getLastLinesNative($laravelLog, 100);
         }
     } else {
         $results['logs_dir_writable'] = is_writable(storage_path('logs'));
