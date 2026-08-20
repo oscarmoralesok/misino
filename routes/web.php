@@ -371,6 +371,26 @@ Route::get('/test-pdf-custom-html/{id}', function ($id) {
             $html = preg_replace('/<div style="margin-top: 30px; font-size: 0.85em; color: #333;">.*?<\/div>/s', '', $html);
         }
         
+        // Custom CSS rule stripping
+        if (request()->has('no_margins')) {
+            $html = str_replace('margin-top: 20px;', '', $html);
+            $html = str_replace('margin-top: 30px;', '', $html);
+            $html = str_replace('margin-top: 40px;', '', $html);
+            $html = str_replace('margin-bottom: 20px;', '', $html);
+            $html = str_replace('margin-bottom: 30px;', '', $html);
+            $html = str_replace('margin-bottom: 15px;', '', $html);
+            $html = str_replace('margin-top: 4cm;', '', $html);
+            $html = str_replace('margin-bottom: 3cm;', '', $html);
+        }
+        if (request()->has('no_fixed')) {
+            $html = str_replace('position: fixed;', '', $html);
+        }
+        if (request()->has('no_border_radius')) {
+            $html = str_replace('border-radius: 10px;', '', $html);
+            $html = str_replace('border-radius: 8px;', '', $html);
+            $html = str_replace('border-radius: 5px;', '', $html);
+        }
+        
         if (request()->has('raw_html')) {
             return $html;
         }
