@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title>Presupuesto #{{ $event->id }}</title>
         <style>
-            /* @page {
+            @page {
                 margin: 0cm 0cm;
             }
             body {
@@ -17,7 +17,7 @@
                 font-size: 12px;
             }
 
-            /* Header & Footer *
+            /* Header & Footer */
             header {
                 position: fixed;
                 top: 0cm;
@@ -50,7 +50,7 @@
                 object-fit: cover;
             }
 
-            /* Info Section *
+            /* Info Section */
             .info-table {
                 width: 100%;
                 margin-bottom: 20px;
@@ -59,7 +59,7 @@
                 vertical-align: top;
             }
             .text-right { text-align: right; }
-            .text-teal { color: #66cdaa; font-weight: bold; } /* Teal color *
+            .text-teal { color: #66cdaa; font-weight: bold; } /* Teal color */
             .text-uppercase { text-transform: uppercase; }
             
             h1 {
@@ -76,14 +76,14 @@
                 font-size: 0.9em;
             }
 
-            /* Items Table *
+            /* Items Table */
             .items-table {
                 width: 100%;
                 border-collapse: collapse;
                 margin-top: 20px;
             }
             .items-table thead th {
-                background-color: #8fd3c5; /* Light Teal *
+                background-color: #8fd3c5; /* Light Teal */
                 color: white;
                 text-transform: uppercase;
                 padding: 10px;
@@ -108,7 +108,7 @@
                 color: #333;
             }
             
-            /* Gallery *
+            /* Gallery */
             .gallery-title {
                 margin-top: 40px;
                 margin-bottom: 15px;
@@ -147,7 +147,7 @@
             .alert-box strong {
                 color: #fa3535;
                 text-transform: uppercase;
-            } */
+            }
         </style>
     </head>
     <body>
