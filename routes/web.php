@@ -279,3 +279,37 @@ Route::get('/test-pdf-layout', function () {
     }
 });
 
+Route::get('/test-pdf-event-clean/{id}', function ($id) {
+    try {
+        $event = \App\Models\Event::findOrFail($id);
+        $event->load(['client', 'items', 'images']);
+        
+        // Clean event data
+        $event->detail = 'EVENT DETAIL CLEAN ASCII';
+        $event->notes = 'EVENT NOTES CLEAN ASCII';
+        
+        // Clean client
+        if ($event->client) {
+            $event->client->name = 'CLIENT NAME ASCII';
+            $event->client->phone = '123456789';
+            $event->client->email = 'client@example.com';
+        }
+        
+        // Clean items
+        foreach ($event->items as $item) {
+            $item->product_name = 'PRODUCT NAME ASCII';
+            $item->description = 'PRODUCT DESCRIPTION ASCII';
+        }
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('events.pdf', compact('event'));
+        return $pdf->download('presupuesto-' . $event->id . '.pdf');
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => explode("\n", $e->getTraceAsString())
+        ], 500);
+    }
+});
+
