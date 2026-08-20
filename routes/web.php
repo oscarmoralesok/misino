@@ -313,3 +313,26 @@ Route::get('/test-pdf-event-clean/{id}', function ($id) {
     }
 });
 
+Route::get('/test-pdf-event-no-images/{id}', function ($id) {
+    try {
+        $event = \App\Models\Event::findOrFail($id);
+        $event->load(['client', 'items', 'images']);
+        
+        $html = view('events.pdf', compact('event'))->render();
+        
+        // Remove pin.png and hand.png from html
+        $html = str_replace(public_path('img/pdf/pin.png'), '', $html);
+        $html = str_replace(public_path('img/pdf/hand.png'), '', $html);
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
+        return $pdf->download('presupuesto-' . $event->id . '.pdf');
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => explode("\n", $e->getTraceAsString())
+        ], 500);
+    }
+});
+
