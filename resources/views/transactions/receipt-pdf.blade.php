@@ -5,16 +5,16 @@
         <title>Recibo #{{ $transaction->id }}</title>
         <style>
             @page {
-                margin-top: 4cm;
-                margin-bottom: 3cm;
-                margin-left: 1cm;
-                margin-right: 1cm;
+                margin: 0cm 0cm;
             }
             body {
+                margin-top: 4cm;
+                margin-left: 1cm;
+                margin-right: 1cm;
+                margin-bottom: 3cm;
                 font-family: 'DejaVu Sans', sans-serif;
                 color: #555;
                 font-size: 12px;
-                margin: 0;
             }
 
             /* Header & Footer */

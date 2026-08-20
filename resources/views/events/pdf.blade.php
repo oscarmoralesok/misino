@@ -5,16 +5,16 @@
         <title>Presupuesto #{{ $event->id }}</title>
         <style>
             @page {
-                margin-top: 4cm;
-                margin-bottom: 3cm;
-                margin-left: 1cm;
-                margin-right: 1cm;
+                margin: 0cm 0cm;
             }
             body {
+                margin-top: 4cm;
+                margin-left: 1cm;
+                margin-right: 1cm;
+                margin-bottom: 3cm;
                 font-family: 'DejaVu Sans', sans-serif;
                 color: #555;
                 font-size: 12px;
-                margin: 0;
             }
 
             /* Header & Footer */
@@ -134,7 +134,7 @@
                 padding: 2px;
             }
 
-            .alert-box {
+            /* .alert-box {
                 color: #fa3535;
                 font-size: 0.9em;
                 margin-top: 30px;
@@ -143,15 +143,11 @@
                 background-color: #fdf9f9;
                 border-radius: 10px;
                 line-height: 1.2;
-                page-break-inside: avoid;
             }
             .alert-box strong {
                 color: #fa3535;
                 text-transform: uppercase;
-            }
-            tr {
-                page-break-inside: avoid;
-            }
+            } */
         </style>
     </head>
     <body>
