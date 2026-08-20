@@ -281,8 +281,8 @@
         {{-- </div> --}}
 
         <div style="margin-top: 30px; font-size: 0.85em; color: #333;">
-            {{-- <strong style="text-transform: uppercase;">SE REQUIERE DE UN ANTICIPO DEL 30%</strong>
-            <ul style="padding-left: 0; margin-top: 10px; list-style-type: none; line-height: 1.2;">
+            <strong style="text-transform: uppercase;">SE REQUIERE DE UN ANTICIPO DEL 30%</strong>
+            {{-- <ul style="padding-left: 0; margin-top: 10px; list-style-type: none; line-height: 1.2;">
                 <li>• Con la seña aseguras la fecha</li>
                 <li>• Se mantiene congelado el precio</li>
                 <li>• <img src="{{ public_path('img/pdf/pin.png') }}" style="width: 12px; vertical-align: middle;"> Las fechas para Candy Bar y decoración se encuentran con mucha demanda.</li>
