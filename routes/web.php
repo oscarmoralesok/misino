@@ -191,3 +191,9 @@ Route::get('/test-pdf-event/{id}', function ($id) {
     }
 });
 
+Route::get('/test-html-event/{id}', function ($id) {
+    $event = \App\Models\Event::findOrFail($id);
+    $event->load(['client', 'items', 'images']);
+    return view('events.pdf', compact('event'));
+});
+
