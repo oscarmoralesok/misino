@@ -193,7 +193,7 @@
             </tr>
         </table>
 
-        {{-- <table class="items-table">
+        <table class="items-table">
             <thead>
                 <tr>
                     <th class="desc-col">DESCRIPCIÓN</th>
@@ -239,7 +239,7 @@
             </tfoot>
         </table>
 
-        @if($event->notes)
+        {{-- @if($event->notes)
             <div style="margin-top: 30px; font-size: 0.9em;">
                 <strong>NOTAS:</strong> <br>
                 {!! nl2br(e($event->notes)) !!}
