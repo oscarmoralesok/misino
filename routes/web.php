@@ -194,6 +194,44 @@ Route::get('/test-pdf-event/{id}', function ($id) {
 Route::get('/test-html-event/{id}', function ($id) {
     $event = \App\Models\Event::findOrFail($id);
     $event->load(['client', 'items', 'images']);
+    
+    $imageStatus = [];
+    foreach ($event->images as $image) {
+        $path = storage_path('app/public/' . $image->image_path);
+        $imageStatus[] = [
+            'db_path' => $image->image_path,
+            'full_path' => $path,
+            'exists' => file_exists($path),
+            'readable' => is_readable($path),
+            'size' => file_exists($path) ? filesize($path) : 0,
+        ];
+    }
+    
+    // Also check other pdf assets
+    $pin = public_path('img/pdf/pin.png');
+    $hand = public_path('img/pdf/hand.png');
+    
+    return response()->json([
+        'event_id' => $event->id,
+        'images_count' => $event->images->count(),
+        'images_status' => $imageStatus,
+        'pin_icon' => [
+            'path' => $pin,
+            'exists' => file_exists($pin),
+            'readable' => is_readable($pin),
+        ],
+        'hand_icon' => [
+            'path' => $hand,
+            'exists' => file_exists($hand),
+            'readable' => is_readable($hand),
+        ],
+        'html_url' => url('/test-html-event-raw/' . $id)
+    ]);
+});
+
+Route::get('/test-html-event-raw/{id}', function ($id) {
+    $event = \App\Models\Event::findOrFail($id);
+    $event->load(['client', 'items', 'images']);
     return view('events.pdf', compact('event'));
 });
 
