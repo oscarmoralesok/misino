@@ -172,3 +172,22 @@ Route::get('/test-pdf', function () {
     }
 });
 
+Route::get('/test-pdf-event/{id}', function ($id) {
+    try {
+        ini_set('memory_limit', '512M');
+        set_time_limit(120);
+
+        $event = \App\Models\Event::findOrFail($id);
+        $event->load(['client', 'items', 'images']);
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('events.pdf', compact('event'));
+        return $pdf->download('presupuesto-' . $event->id . '.pdf');
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => explode("\n", $e->getTraceAsString())
+        ], 500);
+    }
+});
+
