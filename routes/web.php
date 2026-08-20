@@ -53,37 +53,41 @@ require __DIR__.'/auth.php';
 Route::get('/debug-logs', function () {
     $results = [];
     
-    // 1. PHP Info / Error Log path
-    $errorLogPath = ini_get('error_log');
-    $results['php_error_log_path'] = $errorLogPath;
-    if ($errorLogPath && file_exists($errorLogPath) && is_readable($errorLogPath)) {
-        $results['php_error_log_content'] = shell_exec('tail -n 100 ' . escapeshellarg($errorLogPath));
-    } else {
-        $results['php_error_log_content'] = 'Not found or not readable';
-    }
+    // Who is the PHP user?
+    $results['whoami'] = exec('whoami');
     
-    // 2. Web Server Error Log (Apache, Nginx, etc.)
-    $webServerLogs = [
-        '/var/log/apache2/error.log',
-        '/var/log/apache2/error_log',
-        '/var/log/httpd/error_log',
-        '/var/log/nginx/error.log',
+    // Check relative error_log file paths
+    $possibleRelativeLogs = [
+        public_path('error_log'),
+        base_path('error_log'),
+        storage_path('error_log'),
+        base_path('../error_log'),
     ];
-    $results['web_server_log'] = 'Not readable or not found';
-    foreach ($webServerLogs as $logPath) {
-        if (file_exists($logPath) && is_readable($logPath)) {
-            $results['web_server_log_path'] = $logPath;
-            $results['web_server_log'] = shell_exec('tail -n 100 ' . escapeshellarg($logPath));
-            break;
+    
+    $results['found_logs'] = [];
+    foreach ($possibleRelativeLogs as $path) {
+        if (file_exists($path)) {
+            $results['found_logs'][] = [
+                'path' => $path,
+                'readable' => is_readable($path),
+                'size' => filesize($path),
+                'content' => is_readable($path) ? shell_exec('tail -n 100 ' . escapeshellarg($path)) : 'Not readable'
+            ];
         }
     }
     
-    // 3. Laravel Log
+    // Laravel Log Check
     $laravelLog = storage_path('logs/laravel.log');
-    if (file_exists($laravelLog) && is_readable($laravelLog)) {
-        $results['laravel_log'] = shell_exec('tail -n 100 ' . escapeshellarg($laravelLog));
+    $results['laravel_log_path'] = $laravelLog;
+    $results['laravel_log_exists'] = file_exists($laravelLog);
+    if (file_exists($laravelLog)) {
+        $results['laravel_log_readable'] = is_readable($laravelLog);
+        $results['laravel_log_size'] = filesize($laravelLog);
+        if (is_readable($laravelLog)) {
+            $results['laravel_log'] = shell_exec('tail -n 100 ' . escapeshellarg($laravelLog));
+        }
     } else {
-        $results['laravel_log'] = 'Not readable or not found';
+        $results['logs_dir_writable'] = is_writable(storage_path('logs'));
     }
 
     return response()->json($results);
