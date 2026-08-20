@@ -276,7 +276,7 @@
 
         <div class="alert-box">
             {{-- <strong>IMPORTANTE:</strong> --}}
-            Las guirnaldas de globos y elementos decorativos forman parte exclusiva del servicio de alquiler. 
+            {{-- Las guirnaldas de globos y elementos decorativos forman parte exclusiva del servicio de alquiler.  --}}
             No está permitido el retiro, traslado o manipulación de las mismas fuera del lugar del evento por parte del cliente o invitados.
         </div>
 
