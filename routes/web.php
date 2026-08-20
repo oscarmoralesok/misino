@@ -283,6 +283,25 @@ Route::get('/test-pdf-layout', function () {
         </div>
     </body>
 </html>';
+
+        if (request()->has('no_border')) {
+            $html = str_replace('border: 2px solid #eb7d7d;', '', $html);
+        }
+        if (request()->has('no_bg')) {
+            $html = str_replace('background-color: #fdf9f9;', '', $html);
+        }
+        if (request()->has('no_radius')) {
+            $html = str_replace('border-radius: 10px;', '', $html);
+        }
+        if (request()->has('no_padding')) {
+            $html = str_replace('padding: 15px;', '', $html);
+        }
+        if (request()->has('no_margin')) {
+            $html = str_replace('margin-top: 30px;', '', $html);
+        }
+        if (request()->has('no_dejavu')) {
+            $html = str_replace('font-family: "DejaVu Sans", sans-serif;', '', $html);
+        }
         
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
         return $pdf->download('test-layout.pdf');
