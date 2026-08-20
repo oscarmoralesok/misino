@@ -235,3 +235,47 @@ Route::get('/test-html-event-raw/{id}', function ($id) {
     return view('events.pdf', compact('event'));
 });
 
+Route::get('/test-pdf-layout', function () {
+    try {
+        $html = '<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            @page { margin: 0cm 0cm; }
+            body {
+                margin-top: 4cm; margin-left: 1cm; margin-right: 1cm; margin-bottom: 3cm;
+                font-family: "DejaVu Sans", sans-serif;
+            }
+            header {
+                position: fixed; top: 0cm; left: 0cm; right: 0cm; height: 4cm;
+            }
+            img.header-img { width: 100%; height: auto; }
+            footer {
+                position: fixed; bottom: 0cm; left: 0cm; right: 0cm; height: 1.8cm;
+            }
+            img.footer-img { width: 100%; height: auto; }
+        </style>
+    </head>
+    <body>
+        <header>
+            <img src="' . public_path('img/pdf/header.png') . '" class="header-img"/>
+        </header>
+        <footer>
+            <img src="' . public_path('img/pdf/footer.png') . '" class="footer-img"/>
+        </footer>
+        <h1>Hello World</h1>
+    </body>
+</html>';
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
+        return $pdf->download('test-layout.pdf');
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => explode("\n", $e->getTraceAsString())
+        ], 500);
+    }
+});
+
