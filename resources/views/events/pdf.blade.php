@@ -148,6 +148,18 @@
                 color: #fa3535;
                 text-transform: uppercase;
             } */
+            tr {
+                page-break-inside: avoid;
+            }
+            thead {
+                display: table-row-group;
+            }
+            .alert-box {
+                page-break-inside: avoid;
+            }
+            div[style*="margin-top: 30px"] {
+                page-break-inside: avoid;
+            }
         </style>
     </head>
     <body>
@@ -278,16 +290,16 @@
             {{-- No está permitido el retiro, traslado o manipulación de las mismas fuera del lugar del evento por parte del cliente o invitados. --}}
         {{-- </div> --}}
 
-        {{-- <div style="margin-top: 30px; font-size: 0.85em; color: #333;"> --}}
-            {{-- <strong style="text-transform: uppercase;">SE REQUIERE DE UN ANTICIPO DEL 30%</strong>
+        <div style="margin-top: 30px; font-size: 0.85em; color: #333;">
+            <strong style="text-transform: uppercase;">SE REQUIERE DE UN ANTICIPO DEL 30%</strong>
             <ul style="padding-left: 0; margin-top: 10px; list-style-type: none; line-height: 1.2;">
                 <li>• Con la seña aseguras la fecha</li>
-                <li>• Se mantiene congelado el precio</li> --}}
+                <li>• Se mantiene congelado el precio</li>
                 {{-- <li>• Las fechas para Candy Bar y decoración se encuentran con mucha demanda.</li> --}}
                 {{-- <li>• <img src="{{ public_path('img/pdf/hand.png') }}" style="width: 12px; vertical-align: middle;"> Te recomendamos confirmar lo antes posible para asegurar tu lugar.</li> --}}
                 {{-- <li>• La decoración es una propuesta artística y no una copia exacta de referencias. El diseño final puede variar según los elementos seleccionados y las condiciones estéticas del lugar del evento.</li> --}}
-            {{-- </ul> --}}
-        {{-- </div> --}}
+            </ul>
+        </div>
 
     </body>
 </html>

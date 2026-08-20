@@ -176,6 +176,12 @@
                 font-size: 10px;
                 color: #999;
             }
+            tr {
+                page-break-inside: avoid;
+            }
+            .receipt-box, .balance-table, .footer-text, .amount-box {
+                page-break-inside: avoid;
+            }
         </style>
     </head>
     <body>
