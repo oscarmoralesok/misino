@@ -286,7 +286,7 @@
             </div>
         @endif
 
-        <div class="">
+        <div class="alert-box">
             <strong>IMPORTANTE:</strong>
             No está permitido el retiro, traslado o manipulación de las mismas fuera del lugar del evento por parte del cliente o invitados.
         </div>
