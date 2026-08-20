@@ -160,8 +160,8 @@
             <img src="{{ public_path('img/pdf/footer.png') }}" class="footer-img"/>
         </footer>
 
-        {{-- <h1 style="text-align: right;">Presupuesto N.º {{ str_pad($event->id, 5, '0', STR_PAD_LEFT) }}</h1>
-        <table class="info-table">
+        <h1 style="text-align: right;">Presupuesto N.º {{ str_pad($event->id, 5, '0', STR_PAD_LEFT) }}</h1>
+        {{-- <table class="info-table">
             <tr>
                 <!-- Left Side: Client Info -->
                 <td width="50%" class="client-info">
