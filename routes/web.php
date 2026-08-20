@@ -255,6 +255,17 @@ Route::get('/test-pdf-layout', function () {
                 position: fixed; bottom: 0cm; left: 0cm; right: 0cm; height: 1.8cm;
             }
             img.footer-img { width: 100%; height: auto; }
+            
+            .alert-box {
+                color: #fa3535;
+                font-size: 0.9em;
+                margin-top: 30px;
+                padding: 15px;
+                border: 2px solid #eb7d7d;
+                background-color: #fdf9f9;
+                border-radius: 10px;
+                line-height: 1.2;
+            }
         </style>
     </head>
     <body>
@@ -265,6 +276,11 @@ Route::get('/test-pdf-layout', function () {
             <img src="' . public_path('img/pdf/footer.png') . '" class="footer-img"/>
         </footer>
         <h1>Hello World</h1>
+        <div class="alert-box">
+            <strong>IMPORTANTE:</strong>
+            Las guirnaldas de globos y elementos decorativos forman parte exclusiva del servicio de alquiler. 
+            No está permitido el retiro, traslado o manipulación de las mismas fuera del lugar del evento por parte del cliente o invitados.
+        </div>
     </body>
 </html>';
         
