@@ -131,6 +131,36 @@ Route::get('/debug-logs', function () {
         $results['logs_dir_writable'] = is_writable(storage_path('logs'));
     }
 
+    // Check key PDF assets
+    $results['assets'] = [
+        'header' => [
+            'path' => public_path('img/pdf/header.png'),
+            'exists' => file_exists(public_path('img/pdf/header.png')),
+            'readable' => is_readable(public_path('img/pdf/header.png')),
+            'size' => file_exists(public_path('img/pdf/header.png')) ? filesize(public_path('img/pdf/header.png')) : 0,
+        ],
+        'footer' => [
+            'path' => public_path('img/pdf/footer.png'),
+            'exists' => file_exists(public_path('img/pdf/footer.png')),
+            'readable' => is_readable(public_path('img/pdf/footer.png')),
+            'size' => file_exists(public_path('img/pdf/footer.png')) ? filesize(public_path('img/pdf/footer.png')) : 0,
+        ],
+    ];
+
     return response()->json($results);
+});
+
+Route::get('/test-pdf', function () {
+    try {
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML('<h1>Test PDF Generation</h1><p>If you see this, DomPDF is working fine.</p>');
+        return $pdf->download('test.pdf');
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => explode("\n", $e->getTraceAsString())
+        ], 500);
+    }
 });
 
