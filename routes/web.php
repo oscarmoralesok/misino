@@ -49,3 +49,43 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/debug-logs', function () {
+    $results = [];
+    
+    // 1. PHP Info / Error Log path
+    $errorLogPath = ini_get('error_log');
+    $results['php_error_log_path'] = $errorLogPath;
+    if ($errorLogPath && file_exists($errorLogPath) && is_readable($errorLogPath)) {
+        $results['php_error_log_content'] = shell_exec('tail -n 100 ' . escapeshellarg($errorLogPath));
+    } else {
+        $results['php_error_log_content'] = 'Not found or not readable';
+    }
+    
+    // 2. Web Server Error Log (Apache, Nginx, etc.)
+    $webServerLogs = [
+        '/var/log/apache2/error.log',
+        '/var/log/apache2/error_log',
+        '/var/log/httpd/error_log',
+        '/var/log/nginx/error.log',
+    ];
+    $results['web_server_log'] = 'Not readable or not found';
+    foreach ($webServerLogs as $logPath) {
+        if (file_exists($logPath) && is_readable($logPath)) {
+            $results['web_server_log_path'] = $logPath;
+            $results['web_server_log'] = shell_exec('tail -n 100 ' . escapeshellarg($logPath));
+            break;
+        }
+    }
+    
+    // 3. Laravel Log
+    $laravelLog = storage_path('logs/laravel.log');
+    if (file_exists($laravelLog) && is_readable($laravelLog)) {
+        $results['laravel_log'] = shell_exec('tail -n 100 ' . escapeshellarg($laravelLog));
+    } else {
+        $results['laravel_log'] = 'Not readable or not found';
+    }
+
+    return response()->json($results);
+});
+
