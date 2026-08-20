@@ -176,6 +176,7 @@ Route::get('/test-pdf-event/{id}', function ($id) {
     try {
         ini_set('memory_limit', '512M');
         set_time_limit(120);
+        setlocale(LC_NUMERIC, 'C');
 
         $event = \App\Models\Event::findOrFail($id);
         $event->load(['client', 'items', 'images']);

@@ -39,7 +39,7 @@
                 bottom: 0cm;
                 left: 0cm;
                 right: 0cm;
-                height: 1.8cm;
+                height: 2cm;
                 background-repeat: no-repeat;
                 background-size: cover;
                 z-index: -1000;

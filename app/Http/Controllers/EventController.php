@@ -62,6 +62,9 @@ class EventController extends Controller
             ini_set('memory_limit', '512M');
             set_time_limit(120);
 
+            // Set numeric locale to standard C to prevent decimal parsing bugs in European timezones/locales
+            setlocale(LC_NUMERIC, 'C');
+
             $event->load(['client', 'items', 'images']);
             
             $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('events.pdf', compact('event'));
