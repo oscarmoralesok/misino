@@ -57,15 +57,24 @@ class EventController extends Controller
 
     public function downloadPdf(Event $event)
     {
-        // Increase memory and execution time limits for PDF generation
-        ini_set('memory_limit', '512M');
-        set_time_limit(120);
+        try {
+            // Increase memory and execution time limits for PDF generation
+            ini_set('memory_limit', '512M');
+            set_time_limit(120);
 
-        $event->load(['client', 'items', 'images']);
-        
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('events.pdf', compact('event'));
-        
-        return $pdf->download('presupuesto-' . $event->id . '.pdf');
+            $event->load(['client', 'items', 'images']);
+            
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('events.pdf', compact('event'));
+            
+            return $pdf->download('presupuesto-' . $event->id . '.pdf');
+        } catch (\Throwable $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => explode("\n", $e->getTraceAsString())
+            ], 500);
+        }
     }
 
     public function serveFile($path)
