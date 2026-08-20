@@ -5,16 +5,16 @@
         <title>Presupuesto #{{ $event->id }}</title>
         <style>
             @page {
-                margin: 0cm 0cm;
-            }
-            body {
                 margin-top: 4cm;
+                margin-bottom: 3cm;
                 margin-left: 1cm;
                 margin-right: 1cm;
-                margin-bottom: 3cm;
+            }
+            body {
                 font-family: 'DejaVu Sans', sans-serif;
                 color: #555;
                 font-size: 12px;
+                margin: 0;
             }
 
             /* Header & Footer */
@@ -134,7 +134,7 @@
                 padding: 2px;
             }
 
-            /* .alert-box {
+            .alert-box {
                 color: #fa3535;
                 font-size: 0.9em;
                 margin-top: 30px;
@@ -143,11 +143,15 @@
                 background-color: #fdf9f9;
                 border-radius: 10px;
                 line-height: 1.2;
+                page-break-inside: avoid;
             }
             .alert-box strong {
                 color: #fa3535;
                 text-transform: uppercase;
-            } */
+            }
+            tr {
+                page-break-inside: avoid;
+            }
         </style>
     </head>
     <body>
@@ -274,20 +278,22 @@
             </div>
         @endif
 
-        <div><strong>IMPORTANTE:</strong> Las guirnaldas de globos y elementos decorativos forman parte exclusiva del servicio de alquiler.</div>
-            {{-- No está permitido el retiro, traslado o manipulación de las mismas fuera del lugar del evento por parte del cliente o invitados. --}}
-        {{-- </div> --}}
+        <div class="alert-box">
+            <strong>IMPORTANTE:</strong>
+            Las guirnaldas de globos y elementos decorativos forman parte exclusiva del servicio de alquiler. 
+            No está permitido el retiro, traslado o manipulación de las mismas fuera del lugar del evento por parte del cliente o invitados.
+        </div>
 
-        {{-- <div style="margin-top: 30px; font-size: 0.85em; color: #333;"> --}}
-            {{-- <strong style="text-transform: uppercase;">SE REQUIERE DE UN ANTICIPO DEL 30%</strong>
+        <div style="margin-top: 30px; font-size: 0.85em; color: #333; page-break-inside: avoid;">
+            <strong style="text-transform: uppercase;">SE REQUIERE DE UN ANTICIPO DEL 30%</strong>
             <ul style="padding-left: 0; margin-top: 10px; list-style-type: none; line-height: 1.2;">
                 <li>• Con la seña aseguras la fecha</li>
-                <li>• Se mantiene congelado el precio</li> --}}
-                {{-- <li>• Las fechas para Candy Bar y decoración se encuentran con mucha demanda.</li> --}}
-                {{-- <li>• <img src="{{ public_path('img/pdf/hand.png') }}" style="width: 12px; vertical-align: middle;"> Te recomendamos confirmar lo antes posible para asegurar tu lugar.</li> --}}
-                {{-- <li>• La decoración es una propuesta artística y no una copia exacta de referencias. El diseño final puede variar según los elementos seleccionados y las condiciones estéticas del lugar del evento.</li> --}}
-            {{-- </ul> --}}
-        {{-- </div> --}}
+                <li>• Se mantiene congelado el precio</li>
+                <li>• <img src="{{ public_path('img/pdf/pin.png') }}" style="width: 12px; vertical-align: middle;"> Las fechas para Candy Bar y decoración se encuentran con mucha demanda.</li>
+                <li>• <img src="{{ public_path('img/pdf/hand.png') }}" style="width: 12px; vertical-align: middle;"> Te recomendamos confirmar lo antes posible para asegurar tu lugar.</li>
+                <li>• La decoración es una propuesta artística y no una copia exacta de referencias. El diseño final puede variar según los elementos seleccionados y las condiciones estéticas del lugar del evento.</li>
+            </ul>
+        </div>
 
     </body>
 </html>
