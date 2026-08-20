@@ -134,7 +134,7 @@
                 padding: 2px;
             }
 
-            /* .alert-box {
+            .alert-box {
                 color: #fa3535;
                 font-size: 0.9em;
                 margin-top: 30px;
@@ -147,7 +147,7 @@
             .alert-box strong {
                 color: #fa3535;
                 text-transform: uppercase;
-            } */
+            }
             tr {
                 page-break-inside: avoid;
             }
@@ -286,7 +286,7 @@
             </div>
         @endif
 
-        <div>
+        <div class="">
             <strong>IMPORTANTE:</strong>
             No está permitido el retiro, traslado o manipulación de las mismas fuera del lugar del evento por parte del cliente o invitados.
         </div>
