@@ -39,7 +39,7 @@
                 bottom: 0cm;
                 left: 0cm;
                 right: 0cm;
-                height: 2cm;
+                height: 1.8cm;
                 background-repeat: no-repeat;
                 background-size: cover;
                 z-index: -1000;
@@ -83,6 +83,14 @@
             .text-teal { color: #66cdaa; font-weight: bold; }
             .text-uppercase { text-transform: uppercase; }
             
+            /* Receipt Box */
+            .receipt-box {
+                background-color: #f9f9f9;
+                border: 2px solid #66cdaa;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 20px 0;
+            }
             
             .receipt-row {
                 display: table;
@@ -126,30 +134,11 @@
                 font-weight: bold;
             }
             
-            /* Footer text */
-            .footer-text {
-                margin-top: 40px;
-                text-align: center;
-                font-size: 10px;
-                color: #999;
-                page-break-inside: avoid;
-            }
-            tr {
-                page-break-inside: avoid;
-            }
-            .receipt-box {
-                background-color: #f9f9f9;
-                border: 2px solid #66cdaa;
-                border-radius: 8px;
-                padding: 20px;
-                margin: 20px 0;
-                page-break-inside: avoid;
-            }
+            /* Balance Table */
             .balance-table {
                 width: 100%;
                 border-collapse: collapse;
                 margin-top: 20px;
-                page-break-inside: avoid;
             }
             
             .balance-table tr {
