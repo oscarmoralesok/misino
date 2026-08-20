@@ -134,20 +134,20 @@
                 padding: 2px;
             }
 
-            .alert-box {
-                /* color: #fa3535;
+            /* .alert-box {
+                color: #fa3535;
                 font-size: 0.9em;
                 margin-top: 30px;
                 padding: 15px;
                 border: 2px solid #eb7d7d;
                 background-color: #fdf9f9;
                 border-radius: 10px;
-                line-height: 1.2; */
+                line-height: 1.2;
             }
             .alert-box strong {
-                /* color: #fa3535;
-                text-transform: uppercase; */
-            }
+                color: #fa3535;
+                text-transform: uppercase;
+            } */
         </style>
     </head>
     <body>
@@ -274,9 +274,9 @@
             </div>
         @endif
 
-        <div class="alert-box">
+        <div style="color: #fa3535;">
             {{-- <strong>IMPORTANTE:</strong> --}}
-            Las guirnaldas de globos y elementos decorativos forman parte exclusiva del servicio de alquiler. 
+            {{-- Las guirnaldas de globos y elementos decorativos forman parte exclusiva del servicio de alquiler.  --}}
             {{-- No está permitido el retiro, traslado o manipulación de las mismas fuera del lugar del evento por parte del cliente o invitados. --}}
         </div>
 
