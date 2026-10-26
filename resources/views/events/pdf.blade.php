@@ -288,7 +288,8 @@
 
         <div class="alert-box">
             <strong>IMPORTANTE:</strong>
-            No está permitido el retiro, traslado o manipulación de las mismas fuera del lugar del evento por parte del cliente o invitados.
+            No está permitido el retiro, traslado o manipulación de los elementos de la decoración fuera del lugar del evento por parte del cliente o invitados.<br>
+            <strong>Los globos también forman parte del alquiler, no se pueden quitar, romper o manipular.</strong>
         </div>
 
         <div style="margin-top: 30px; font-size: 0.85em; color: #333;">
@@ -299,6 +300,7 @@
                 <li>• <img src="{{ public_path('img/pdf/pin.png') }}" style="width: 12px; vertical-align: middle;"> Las fechas para Candy Bar y decoración se encuentran con mucha demanda.</li>
                 <li>• <img src="{{ public_path('img/pdf/hand.png') }}" style="width: 12px; vertical-align: middle;"> Te recomendamos confirmar lo antes posible para asegurar tu lugar.</li>
                 <li>• La decoración es una propuesta artística y no una copia exacta de referencias. El diseño final puede variar según los elementos seleccionados y las condiciones estéticas del lugar del evento.</li>
+                <li>• Todo lo indicado en el presente presupuesto corresponde a alquiler y prestación de servicios. No implica la venta de ningun elemento. En caso de que se desee adquirir algo, se debera consultar el precio de venta.</li>
             </ul>
         </div>
 

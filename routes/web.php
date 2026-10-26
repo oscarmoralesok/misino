@@ -3,8 +3,13 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
-
+use App\Models\Client;
+use App\Models\EventType;
+use App\Models\Product;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -49,3 +54,28 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('product-list', function () {
+    $products = Product::all();
+    
+    foreach ($products as $product) {
+        echo "INSERT INTO `misino`.`products` (name,slug,description,price,business_id) VALUES ('" . $product->name . "','" . Str::slug($product->name) . "','" . $product->description . "'," . $product->base_price . ",4);<br>";
+    }
+});
+
+Route::get('customer-list', function () {
+    $customers = Client::all();
+    
+    foreach ($customers as $customer) {
+        $email = $customer->email ? "'" . Crypt::encryptString($customer->email) . "'" : 'NULL';
+        echo "INSERT INTO `misino`.`customers` (name,phone,email,business_id) VALUES ('" . $customer->name . "','" . Crypt::encryptString($customer->phone) . "'," . $email . ",4);<br>";
+    }
+});
+
+Route::get('category-list', function () {
+    $categories = EventType::all();
+
+    foreach ($categories as $category) {
+        echo "INSERT INTO `misino`.`categories` (name, slug) VALUES ('" . $category->name . "', '" . Str::slug($category->name) . "');<br>";
+    }
+});
